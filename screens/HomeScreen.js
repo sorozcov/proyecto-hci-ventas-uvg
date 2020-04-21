@@ -1,9 +1,26 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Platform, StyleSheet, Text, TouchableOpacity, View ,Button} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { MonoText } from '../components/StyledText';
+
+async function signup(email, pass) {
+ console.log("started");
+  try {
+      await firebase.auth()
+          .createUserWithEmailAndPassword(email, pass);
+
+      console.log("Account created");
+
+      // Navigate to the Home page, the user is auto logged in
+
+  } catch (error) {
+      console.log(error.toString())
+  }
+
+}
+
 
 export default function HomeScreen() {
   return (
@@ -26,6 +43,11 @@ export default function HomeScreen() {
           <Text style={styles.getStartedText}>Open up the code for this screen:</Text>
 
           <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
+            <MonoText>screens/HomeScreen.js</MonoText>
+          </View>
+          <View>
+            <Button onPress={()=>signup("oro18282@uvg.edu.gt","hola1234567")}
+            title="Learn More"></Button>
             <MonoText>screens/HomeScreen.js</MonoText>
           </View>
 
