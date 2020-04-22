@@ -23,8 +23,7 @@ var firebaseConfig = {
   appId: "1:744300525247:web:a8730f68318ad2d3bd380a",
   measurementId: "G-RLWRV7Y8SK"
 };
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+
 
 //Se crea el store
 const store = configureStore();
@@ -50,7 +49,8 @@ export default function App(props) {
     async function loadResourcesAndDataAsync() {
       try {
         SplashScreen.preventAutoHide();
-
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
         // Load fonts
         await Font.loadAsync({
           ...Ionicons.font,
