@@ -38,13 +38,6 @@ const theme = {
     primary: '#00C331',
     accent: '#03A9F4',
   },
-  fonts: {
-    ...DefaultTheme.fonts,
-    regular: require('./assets/fonts/Dosis-Regular.ttf'),
-    medium: require('./assets/fonts/Dosis-Medium.ttf'),
-    light: require('./assets/fonts/Dosis-Light.ttf'),
-    thin: require('./assets/fonts/Dosis-Bold.ttf')
-  }
 };
 
 export default function App(props) {
@@ -61,7 +54,13 @@ export default function App(props) {
         // Load fonts
         await Font.loadAsync({
           ...Ionicons.font,
-          'dosis': require('./assets/fonts/Dosis-Regular.ttf'),
+          'dosis-regular': require('./assets/fonts/Dosis-Regular.ttf'),
+          'dosis-medium': require('./assets/fonts/Dosis-Medium.ttf'),
+          'dosis-light': require('./assets/fonts/Dosis-Light.ttf'),
+          'dosis-extra-light': require('./assets/fonts/Dosis-ExtraLight.ttf'),
+          'dosis-semi-bold': require('./assets/fonts/Dosis-SemiBold.ttf'),
+          'dosis-bold': require('./assets/fonts/Dosis-Bold.ttf'),
+          'dosis-extra-bold': require('./assets/fonts/Dosis-ExtraBold.ttf'),
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
