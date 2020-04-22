@@ -1,10 +1,24 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { TextInput, withTheme, Text, Button } from 'react-native-paper';
-
+import * as firebase from "firebase";
 //import { DosisText } from '../components/StyledText';
 
-
+async function login(email, pass) {
+  console.log("started");
+   try {
+       await firebase.auth()
+           .signInWithEmailAndPassword(email, pass);
+ 
+       console.log("Login succesfull");
+ 
+       // Navigate to the Home page, the user is auto logged in
+ 
+   } catch (error) {
+       console.log(error.toString())
+   }
+ 
+ }
 
 function LoginScreen(props) {
   const { colors } = props.theme;
@@ -57,7 +71,7 @@ function LoginScreen(props) {
               
               
             }}
-            onPress={() => console.log('Pressed')}>
+            onPress={() => login(mailInput,password)}>
             INICIAR SESIÓN
           </Button>
         </View>      
