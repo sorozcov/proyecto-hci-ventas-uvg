@@ -40,19 +40,17 @@ function LoginScreen(props) {
             secureTextEntry={true}
           />
           <Button
-            color={colors.accent}
-            icon="shopify"
+            color={'#000000'}
+            icon="face"
             roundness="4"
-            
             mode="contained"
             style={{
               fontFamily: 'dosis',
-              flex:0.1,
-              marginLeft: '6%',
-              marginRight: '6%',
-              heigh: 10,
+              marginLeft: '5%',
+              marginRight: '5%',
+              
               alignText: 'center',
-              fontSize: '14px',
+              fontSize: '18px',
             }}
             onPress={() => console.log('Pressed')}>
             INICIAR SESIÓN
