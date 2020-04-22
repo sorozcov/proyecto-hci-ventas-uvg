@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { reducer as formReducer } from 'redux-form'
 
 import loggedUser, * as loggedUserSelectors from './loggedUser';
 import sales, * as salesSelectors from './sales';
@@ -7,6 +8,7 @@ import sales, * as salesSelectors from './sales';
 const reducer = combineReducers({
   loggedUser,
   sales,
+  form: formReducer,
 });
 
 
