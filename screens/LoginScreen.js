@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import { TextInput, withTheme, Text } from 'react-native-paper';
+import { TextInput, withTheme, Text, Button } from 'react-native-paper';
 
 //import { DosisText } from '../components/StyledText';
 
@@ -9,6 +9,7 @@ import { TextInput, withTheme, Text } from 'react-native-paper';
 function LoginScreen(props) {
   const { colors } = props.theme;
   const [mailInput, changeMailInput] = useState('');
+  const [password, changePassword] = useState('');
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
@@ -34,9 +35,28 @@ function LoginScreen(props) {
             mode={'outlined'}
             label="Contraseña"
             placeholder="Ingresa tu contraseña"
-            value={mailInput}
-            onChangeText={changeMailInput}
+            value={password}
+            onChangeText={changePassword}
+            secureTextEntry={true}
           />
+          <Button
+            color={theme.colors.accent}
+            icon="shopify"
+            roundness="4"
+            
+            mode="contained"
+            style={{
+              fontFamily: 'dosis',
+              flex:0.1,
+              marginLeft: '6%',
+              marginRight: '6%',
+              heigh: 10,
+              alignText: 'center',
+              fontSize: '14px',
+            }}
+            onPress={() => console.log('Pressed')}>
+            INICIAR SESIÓN
+          </Button>
         </View>      
       </View>
       <View style={styles.bottomContainer}>
