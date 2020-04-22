@@ -42,15 +42,20 @@ function LoginScreen(props) {
           <Button
             color={'#000000'}
             icon="login"
-            roundness="4"
+            
+            height = "15%"
             mode="contained"
+            labelStyle={{
+              alignText: 'center',
+              fontSize: '18px',
+            }}
             style={{
               fontFamily: 'dosis',
               marginLeft: '5%',
               marginRight: '5%',
+              marginTop:'3%'
               
-              alignText: 'center',
-              fontSize: '18px',
+              
             }}
             onPress={() => console.log('Pressed')}>
             INICIAR SESIÓN
