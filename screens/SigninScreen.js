@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import { TextInput, withTheme, Text, Button } from 'react-native-paper';
+
+import { TextInput, withTheme, Text, Button ,BottomNavigation} from 'react-native-paper';
 import { reduxForm, Field } from 'redux-form';
 import { ScrollView } from 'react-native-gesture-handler';
+
+
+
 import * as firebase from "firebase";
 
 import MyTextInput from '../components/textInput';
@@ -99,6 +103,7 @@ const styles = StyleSheet.create({
     fontSize:16
   }
 });
+
 export default reduxForm({ 
   form: 'signIn',
   validate: (values) => {
