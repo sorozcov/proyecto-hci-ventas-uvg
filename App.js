@@ -5,24 +5,15 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
-
 import AuthScreen from './screens/AuthScreen';
-import MainScreen from './screens/MainScreen';
-import useLinking from './navigation/useLinking';
-import * as firebase from "firebase";
-import configureStore from './store';
 
-// Your web app's Firebase configuration
-var firebaseConfig = {
-  apiKey: "AIzaSyDx00LholF4DDcvNLfoPDvky1xB03DX6w4",
-  authDomain: "hci-ventas-uvg.firebaseapp.com",
-  databaseURL: "https://hci-ventas-uvg.firebaseio.com",
-  projectId: "hci-ventas-uvg",
-  storageBucket: "hci-ventas-uvg.appspot.com",
-  messagingSenderId: "744300525247",
-  appId: "1:744300525247:web:a8730f68318ad2d3bd380a",
-  measurementId: "G-RLWRV7Y8SK"
-};
+
+
+import configureStore from './store';
+import configureFirebase from './firebase/firebase'
+import HomeScreen from './screens/HomeScreen';
+
+
 
 
 //Se crea el store
@@ -42,7 +33,7 @@ const theme = {
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
   const containerRef = React.useRef();
-  const { getInitialState } = useLinking(containerRef);
+  
 
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
@@ -50,7 +41,7 @@ export default function App(props) {
       try {
         SplashScreen.preventAutoHide();
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        configureFirebase();
         // Load fonts
         await Font.loadAsync({
           ...Ionicons.font,
@@ -83,7 +74,7 @@ export default function App(props) {
           <View style={styles.container}>
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
             { true ? <AuthScreen />
-            : <MainScreen/>}
+            : <HomeScreen/>}
           </View>
         </PaperProvider>
       </Provider>

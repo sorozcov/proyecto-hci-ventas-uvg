@@ -1,29 +1,41 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View,ActivityIndicator,Modal,Alert,Keyboard } from 'react-native';
 import { TextInput, withTheme, Text, Button } from 'react-native-paper';
 import * as firebase from "firebase";
 
 
-async function login(email, pass) {
-  console.log("started");
-   try {
-       await firebase.auth()
-           .signInWithEmailAndPassword(email, pass);
- 
-       console.log("Login succesfull");
- 
-       // Navigate to the Home page, the user is auto logged in
- 
-   } catch (error) {
-       console.log(error.toString())
-   }
- 
-}
+
 
 function LoginScreen({ theme, navigation }) {
   const { colors, roundness } = theme;
+  const [modalVisible, setModalVisible] = useState(false);
   const [mailInput, changeMailInput] = useState('');
   const [password, changePassword] = useState('');
+  async function login(email, pass) {
+    Keyboard.dismiss();
+    console.log("started");
+    setModalVisible(true);
+     try {
+         
+         await firebase.auth()
+             .signInWithEmailAndPassword(email, pass);
+   
+            console.log("Login succesfull");
+            setModalVisible(false);
+         // Navigate to the Home page, the user is auto logged in
+         navigation.navigate('Home')
+     } catch (error) {
+         console.log(error.toString());
+         setModalVisible(false);
+         setTimeout(function(){
+         Alert.alert(
+          "Error",
+          "Los datos ingresados no son válidos para ningún usuario.",
+          []
+         )},100)
+     }
+   
+  }
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
@@ -73,16 +85,34 @@ function LoginScreen({ theme, navigation }) {
             }}
             onPress={() => login(mailInput,password)}>
             INICIAR SESIÓN
+          
           </Button>
-        </View>      
+          
+        </View>    
+       
       </View>
+      
+      <Modal
+        transparent={true}
+        animationType={'none'}
+        visible={modalVisible}>
+        <View style={styles.modalBackground}>
+          <View style={styles.activityIndicatorWrapper}>
+          <ActivityIndicator size="large" color={colors.primary}/>
+          </View>
+        </View>
+    </Modal>     
+            
+         
+    
       <View style={styles.bottomContainer}>
-      <View style={styles.bottomContainer}></View>
+      
         <Text style={styles.textStyle}>¿No tienes una cuenta?  
           <Text style={{...styles.textStyle, color: colors.accent, }} onPress={() => navigation.navigate('Signin') }> Regístrate</Text>
         </Text>
       </View>
     </View>
+    
   );
 }
 
@@ -123,6 +153,22 @@ const styles = StyleSheet.create({
     textAlign: 'center', 
     fontFamily: 'dosis-semi-bold',
     fontSize:16
+  },
+  modalBackground: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    backgroundColor: '#00000040'
+  },
+  activityIndicatorWrapper: {
+    backgroundColor: '#FFFFFF',
+    height: 100,
+    width: 100,
+    borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around'
   }
 });
 
