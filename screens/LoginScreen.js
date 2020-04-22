@@ -7,7 +7,7 @@ import { TextInput, withTheme, Text, Button } from 'react-native-paper';
 
 
 function LoginScreen(props) {
-  const { colors } = props.theme;
+  const { colors, roundness } = props.theme;
   const [mailInput, changeMailInput] = useState('');
   const [password, changePassword] = useState('');
   return (
@@ -40,10 +40,10 @@ function LoginScreen(props) {
             secureTextEntry={true}
           />
           <Button
+            theme={roundness}
             color={'#000000'}
             icon="login"
-            
-            height = "15%"
+            height = "18%"
             mode="contained"
             labelStyle={{
               fontFamily:"dosis-bold",
@@ -53,8 +53,8 @@ function LoginScreen(props) {
               fontFamily: 'dosis',
               marginLeft: '5%',
               marginRight: '5%',
-              marginTop:'3%'
-              
+              marginTop:'4%',
+              justifyContent: 'center',            
               
             }}
             onPress={() => console.log('Pressed')}>
