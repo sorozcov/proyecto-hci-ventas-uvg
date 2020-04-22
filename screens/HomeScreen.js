@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View ,Button} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { MonoText } from '../components/StyledText';
+import { DosisText } from '../components/StyledText';
 
 async function signup(email, pass) {
  console.log("started");
@@ -43,12 +43,12 @@ export default function HomeScreen() {
           <Text style={styles.getStartedText}>Open up the code for this screen:</Text>
 
           <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-            <MonoText>screens/HomeScreen.js</MonoText>
+            <DosisText>screens/HomeScreen.js</DosisText>
           </View>
           <View>
             <Button onPress={()=>signup("oro18282@uvg.edu.gt","hola1234567")}
             title="Learn More"></Button>
-            <MonoText>screens/HomeScreen.js</MonoText>
+            <DosisText>screens/HomeScreen.js</DosisText>
           </View>
 
           <Text style={styles.getStartedText}>
@@ -67,7 +67,7 @@ export default function HomeScreen() {
         <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
 
         <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</MonoText>
+          <DosisText style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</DosisText>
         </View>
       </View>
     </View>
