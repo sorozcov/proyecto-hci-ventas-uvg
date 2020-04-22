@@ -41,7 +41,7 @@ function LoginScreen(props) {
           />
           <Button
             color={'#000000'}
-            icon="face"
+            icon="login"
             roundness="4"
             mode="contained"
             style={{
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     position: 'absolute',
-    bottom: 10,
+    bottom: 50,
     left: 0,
     right: 0,
     alignItems: 'center',
