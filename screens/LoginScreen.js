@@ -40,7 +40,7 @@ function LoginScreen(props) {
             secureTextEntry={true}
           />
           <Button
-            color={theme.colors.accent}
+            color={colors.accent}
             icon="shopify"
             roundness="4"
             
