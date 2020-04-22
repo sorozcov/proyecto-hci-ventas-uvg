@@ -64,8 +64,8 @@ function LoginScreen(props) {
       </View>
       <View style={styles.bottomContainer}>
       <View style={styles.bottomContainer}></View>
-        <Text style={{textAlign: 'center', fontFamily: 'dosis-medium',fontSize:16}}>¿No tienes una cuenta?  
-          <Text style={{textAlign: 'center', color: colors.accent, fontFamily: 'dosis-medium',fontSize:16}}> Regístrate</Text>
+        <Text style={styles.textStyle}>¿No tienes una cuenta?  
+          <Text style={{...styles.textStyle, color: colors.accent, }}> Regístrate</Text>
         </Text>
       </View>
     </View>
@@ -105,6 +105,11 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     paddingBottom: 10,
   },
+  textStyle:{
+    textAlign: 'center', 
+    fontFamily: 'dosis-semi-bold',
+    fontSize:16
+  }
 });
 
 export default withTheme(LoginScreen);
