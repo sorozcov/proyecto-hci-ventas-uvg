@@ -46,8 +46,8 @@ function LoginScreen(props) {
             height = "15%"
             mode="contained"
             labelStyle={{
-              alignText: 'center',
-              fontSize: '18px',
+              fontFamily:"dosis-bold",
+              fontSize: 15,
             }}
             style={{
               fontFamily: 'dosis',
@@ -64,8 +64,8 @@ function LoginScreen(props) {
       </View>
       <View style={styles.bottomContainer}>
       <View style={styles.bottomContainer}></View>
-        <Text style={{textAlign: 'center'}}>¿No tienes una cuenta?  
-          <Text style={{textAlign: 'center', color: colors.accent}}> Regístrate</Text>
+        <Text style={{textAlign: 'center', fontFamily: 'dosis-medium',fontSize:16}}>¿No tienes una cuenta?  
+          <Text style={{textAlign: 'center', color: colors.accent, fontFamily: 'dosis-medium',fontSize:16}}> Regístrate</Text>
         </Text>
       </View>
     </View>
