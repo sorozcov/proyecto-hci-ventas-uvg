@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import { TextInput, withTheme, Text, Button } from 'react-native-paper';
+import { TextInput, withTheme, Text, Button, BottomNavigation } from 'react-native-paper';
 import * as firebase from "firebase";
 
 
