@@ -5,14 +5,13 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
-import { createStackNavigator } from '@react-navigation/stack';
 
 import LoginScreen from './screens/LoginScreen';
+import MainScreen from './screens/MainScreen';
 import useLinking from './navigation/useLinking';
 import * as firebase from "firebase";
 import configureStore from './store';
 
-const Stack = createStackNavigator();
 // Your web app's Firebase configuration
 var firebaseConfig = {
   apiKey: "AIzaSyDx00LholF4DDcvNLfoPDvky1xB03DX6w4",
@@ -50,7 +49,6 @@ const theme = {
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
-  const [initialNavigationState, setInitialNavigationState] = React.useState();
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
 
@@ -59,9 +57,6 @@ export default function App(props) {
     async function loadResourcesAndDataAsync() {
       try {
         SplashScreen.preventAutoHide();
-
-        // Load our initial navigation state
-        setInitialNavigationState(await getInitialState());
 
         // Load fonts
         await Font.loadAsync({
@@ -88,7 +83,8 @@ export default function App(props) {
         <PaperProvider theme={theme}>
           <View style={styles.container}>
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            <LoginScreen />
+            { true ? <LoginScreen />
+            : <MainScreen/>}
           </View>
         </PaperProvider>
       </Provider>
