@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { TextInput, withTheme, Text, Button } from 'react-native-paper';
 import * as firebase from "firebase";
-//import { DosisText } from '../components/StyledText';
+
 
 async function login(email, pass) {
   console.log("started");
@@ -18,10 +18,10 @@ async function login(email, pass) {
        console.log(error.toString())
    }
  
- }
+}
 
-function LoginScreen(props) {
-  const { colors, roundness } = props.theme;
+function LoginScreen({ theme, navigation }) {
+  const { colors, roundness } = theme;
   const [mailInput, changeMailInput] = useState('');
   const [password, changePassword] = useState('');
   return (
@@ -79,7 +79,7 @@ function LoginScreen(props) {
       <View style={styles.bottomContainer}>
       <View style={styles.bottomContainer}></View>
         <Text style={styles.textStyle}>¿No tienes una cuenta?  
-          <Text style={{...styles.textStyle, color: colors.accent, }}> Regístrate</Text>
+          <Text style={{...styles.textStyle, color: colors.accent, }} onPress={() => navigation.navigate('Signin') }> Regístrate</Text>
         </Text>
       </View>
     </View>

@@ -6,7 +6,7 @@ import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 
-import LoginScreen from './screens/LoginScreen';
+import AuthScreen from './screens/AuthScreen';
 import MainScreen from './screens/MainScreen';
 import useLinking from './navigation/useLinking';
 import * as firebase from "firebase";
@@ -82,7 +82,7 @@ export default function App(props) {
         <PaperProvider theme={theme}>
           <View style={styles.container}>
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            { true ? <LoginScreen />
+            { true ? <AuthScreen />
             : <MainScreen/>}
           </View>
         </PaperProvider>
