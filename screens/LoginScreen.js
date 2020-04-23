@@ -108,7 +108,7 @@ function LoginScreen({ theme, navigation }) {
       <View style={styles.bottomContainer}>
       
         <Text style={styles.textStyle}>¿No tienes una cuenta?  
-          <Text style={{...styles.textStyle, color: colors.accent, }} onPress={() => navigation.navigate('Signin') }> Regístrate</Text>
+          <Text style={{...styles.textStyle, color: colors.accent, }} onPress={() => navigation.navigate('Signup') }> Regístrate</Text>
         </Text>
       </View>
     </View>

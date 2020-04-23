@@ -1,34 +1,18 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-
+import { connect } from 'react-redux';
 import { TextInput, withTheme, Text, Button ,BottomNavigation} from 'react-native-paper';
 import { reduxForm, Field } from 'redux-form';
 import { ScrollView } from 'react-native-gesture-handler';
 
-
-
 import * as firebase from "firebase";
-
 import MyTextInput from '../components/textInput';
 
-
-async function login(email, pass) {
-  console.log("started");
-   try {
-       await firebase.auth()
-           .signInWithEmailAndPassword(email, pass);
- 
-       console.log("Login succesfull");
- 
-       // Navigate to the Home page, the user is auto logged in
- 
-   } catch (error) {
-       console.log(error.toString())
-   }
- 
+const signUp = values => {
+  console.log('submitting form', values)
 }
 
-function SigninScreen({ theme, navigation }) {
+function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
   const { colors, roundness } = theme;
   return (
     <View style={styles.container}>
@@ -41,6 +25,7 @@ function SigninScreen({ theme, navigation }) {
           <Field name={'password'} component={MyTextInput} label='Contraseña' placeholder='Ingresa tu contraseña' secureTextEntry={true}/>
           <Field name={'phoneNumber'} component={MyTextInput} label='Teléfono' placeholder='Ingresa tu número de teléfono' keyboardType='numeric'/>
           <Button
+            disabled={!(dirty && valid)}
             theme={roundness}
             color={'#000000'}
             icon="login"
@@ -58,7 +43,7 @@ function SigninScreen({ theme, navigation }) {
               justifyContent: 'center',            
               
             }}
-            onPress={() => login(mailInput,password)}>
+            onPress={handleSubmit(signUp)}>
             REGISTRARSE
           </Button>
         </View>
@@ -104,8 +89,11 @@ const styles = StyleSheet.create({
   }
 });
 
-export default reduxForm({ 
-  form: 'signIn',
+export default connect(
+  undefined,
+  undefined,
+)(reduxForm({ 
+  form: 'signUp',
   validate: (values) => {
     const errors = {};
     errors.name = !values.name
@@ -132,4 +120,4 @@ export default reduxForm({
 
     return errors;
   }
-})(withTheme(SigninScreen));
+})(withTheme(SignupScreen)));
