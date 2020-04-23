@@ -51,6 +51,7 @@ function LoginScreen({ theme, navigation }) {
           <TextInput
             style={styles.inputContainerStyle}
             mode={'outlined'}
+            keyboardType='email-address'
             label="Correo"
             placeholder="Ingresa tu correo"
             value={mailInput}
