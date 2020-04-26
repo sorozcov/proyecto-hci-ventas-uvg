@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View,KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux';
 import { TextInput, withTheme, Text, Button } from 'react-native-paper';
 import { reduxForm, Field } from 'redux-form';
@@ -15,6 +15,10 @@ const signUp = values => {
 function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit }) {
   const { colors, roundness } = theme;
   return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
     <View style={styles.container}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
         <View style={styles.formContainer}>
@@ -46,6 +50,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit }) {
         </View>
         </ScrollView>
     </View>
+    </KeyboardAvoidingView>
   );
 }
 
