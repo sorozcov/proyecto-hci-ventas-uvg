@@ -26,7 +26,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit }) {
           <Field name={'image'} component={ImagePicker} image={null}/>
           <Field name={'name'} component={MyTextInput} label='Nombre' placeholder='Ingresa el nombre del producto'/>
           <Field name={'description'} component={MyTextInput} label='Descripción' placeholder='Ingresa una descripción'/>
-          <Field name={'price'} component={MyTextInput} label='Precio' placeholder='Ingresa el precio que tendrá el producto' keyboardType='numeric'/>
+          <Field name={'price'} component={MyTextInput} label='Precio' placeholder='Ingresa el precio que tendrá el producto' keyboardType='decimal-pad'/>
           <Button
             disabled={!(dirty && valid)}
             theme={roundness}
