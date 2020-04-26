@@ -1,11 +1,12 @@
 import * as React from 'react';
 import  { useState } from 'react';
-import { Button, Image, View } from 'react-native';
+import {  Image, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { ActionPicker } from 'react-native-action-picker';
 import * as firebase from "firebase";
+import {Avatar,Button,TextInput} from 'react-native-paper';
 
 uriToBlob = (uri) => {
     return new Promise((resolve, reject) => {
@@ -44,24 +45,36 @@ uriToBlob = (uri) => {
 
  
 
-export default class ImagePickerExample extends React.Component {
+export default class ImagePickerUser extends React.Component {
+  
   state = {
     image: null,
     actionPickerVisible:false
   };
-
+  input = this.props.input;
+  constructor(props){
+    super(props)
+    props.input.onChange(props.image)
+    console.log(this.props)
+    
+  }
   render() {
+    this.props.input.onChange(this.state.image)
+    
     let { image,actionPickerVisible } = this.state;
     
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button style={{fontFamily:"dosis-medium"}} title="Subir imagen" onPress={()=>this.setState({ actionPickerVisible: true })} />
-        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 ,borderRadius:50}} />}
+        
+        {!image &&  <Avatar.Icon size={100} icon="account" color="white" />}
+        {image &&  <Avatar.Image style={{alignSelf:'center'}} size={100} source={{ uri: image }} />}
+        <Button labelStyle={{fontFamily:"dosis-bold"}} onPress={()=>this.setState({ actionPickerVisible: true })} >Cambiar Imagen</Button>
         <ActionPicker
             style={{fontFamily:"dosis-medium"}}
           options={this.createOptions()}
           isVisible={actionPickerVisible}
           onCancelRequest={()=>this.setState({ actionPickerVisible: false})} />
+       
       </View>
     );
   }
@@ -96,11 +109,14 @@ export default class ImagePickerExample extends React.Component {
       }).then(result=>{
             if (!result.cancelled) {
                 this.setState({ image: result.uri });
+                
+                
                 return uriToBlob(result.uri)
             }
 
             console.log(result);
             }).then(blob=>{
+                
                 return uploadToFirebase(blob);
             }).then((snapshot)=>{
 
@@ -133,7 +149,7 @@ export default class ImagePickerExample extends React.Component {
             }).then(blob=>{
                 return uploadToFirebase(blob);
             }).then((snapshot)=>{
-
+              this.setState({ actionPickerVisible: false})
                 console.log("File uploaded");
             
             }).catch((error)=>{
@@ -149,7 +165,7 @@ export default class ImagePickerExample extends React.Component {
   createOptions = () => {
     return [
       {label: 'Abrir Galería', action: () => this._pickImage()},
-      {label: 'Abrir cámara', action: () => this._takeImage()},
+      {label: 'Abrir Cámara', action: () => this._takeImage()},
       
     ];
   }

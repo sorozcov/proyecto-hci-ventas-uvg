@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, View,ActivityIndicator,Modal,Alert,Keyboard } from 'react-native';
-import { TextInput, withTheme, Text, Button } from 'react-native-paper';
+import { Image, StyleSheet, View,Modal,Alert,Keyboard } from 'react-native';
+import { TextInput, withTheme,ActivityIndicator ,Text, Button } from 'react-native-paper';
 import * as firebase from "firebase";
 
 
@@ -8,30 +8,32 @@ import * as firebase from "firebase";
 
 function LoginScreen({ theme, navigation }) {
   const { colors, roundness } = theme;
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisibleIndicatorLogin, setmodalVisibleIndicatorLogin] = useState(false);
   const [mailInput, changeMailInput] = useState('');
   const [password, changePassword] = useState('');
   async function login(email, pass) {
     Keyboard.dismiss();
     console.log("started");
-    setModalVisible(true);
+    setmodalVisibleIndicatorLogin(true);
      try {
          
          await firebase.auth()
              .signInWithEmailAndPassword(email, pass);
    
             console.log("Login succesfull");
-            setModalVisible(false);
+            setmodalVisibleIndicatorLogin(false);
          // Navigate to the Home page, the user is auto logged in
          navigation.navigate('Home')
      } catch (error) {
          console.log(error.toString());
-         setModalVisible(false);
+         setmodalVisibleIndicatorLogin(false);
          setTimeout(function(){
          Alert.alert(
           "Error",
           "Los datos ingresados no son válidos para ningún usuario.",
-          []
+          [
+            {text: 'OK', onPress: () => {}},
+          ],
          )},100)
      }
    
@@ -96,10 +98,10 @@ function LoginScreen({ theme, navigation }) {
       <Modal
         transparent={true}
         animationType={'none'}
-        visible={modalVisible}>
+        visible={modalVisibleIndicatorLogin}>
         <View style={styles.modalBackground}>
           <View style={styles.activityIndicatorWrapper}>
-          <ActivityIndicator size="large" color={colors.primary}/>
+          <ActivityIndicator size="large" animating={modalVisibleIndicatorLogin} color={colors.primary}/>
           </View>
         </View>
     </Modal>     

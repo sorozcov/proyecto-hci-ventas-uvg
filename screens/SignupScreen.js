@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
-import { TextInput, withTheme, Text, Button ,BottomNavigation} from 'react-native-paper';
+import { TextInput, withTheme, Text, Button ,Avatar, TouchableRipple} from 'react-native-paper';
 import { reduxForm, Field } from 'redux-form';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import ImagePicker from '../components/ImagePickerUser';
 import * as firebase from "firebase";
 import MyTextInput from '../components/textInput';
 
@@ -19,10 +19,12 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
         <View style={styles.formContainer}>
           <Text style={{...styles.titleStyle, color: colors.accent, }}>Registro</Text>
+          <Field name={'image'} component={ImagePicker} image={null}/>
           <Field name={'name'} component={MyTextInput} label='Nombre' placeholder='Ingresa tu nombre'/>
           <Field name={'lastName'} component={MyTextInput} label='Apellido' placeholder='Ingresa tu apellido'/>
           <Field name={'email'} component={MyTextInput} label='Correo' placeholder='Ingresa tu correo' keyboardType='email-address'/>
           <Field name={'password'} component={MyTextInput} label='Contraseña' placeholder='Ingresa tu contraseña' secureTextEntry={true}/>
+          <Field name={'passwordConfirm'} component={MyTextInput} label='Confirmación Contraseña' placeholder='Confirma tu contraseña' secureTextEntry={true}/>
           <Field name={'phoneNumber'} component={MyTextInput} label='Teléfono' placeholder='Ingresa tu número de teléfono' keyboardType='numeric'/>
           <Button
             disabled={!(dirty && valid)}
@@ -48,7 +50,7 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
           </Button>
         </View>
         <Text style={styles.textStyle}>¿Ya tienes una cuenta?  
-          <Text style={{...styles.textStyle, color: colors.accent, }} onPress={() => navigation.navigate('Login') }> Inicia Sesión</Text>
+          <Text style={{...styles.textStyle, color: colors.accent }} onPress={() => navigation.navigate('Login') }> Inicia Sesión</Text>
         </Text>
         </ScrollView>
     </View>
@@ -77,8 +79,8 @@ const styles = StyleSheet.create({
     textAlign: 'center', 
     fontFamily: 'dosis-extra-bold',
     fontSize:30,
-    paddingBottom: '10%',
-    paddingTop: '10%'
+    paddingBottom: '6%',
+    paddingTop: '8%'
   },
   textStyle:{
     textAlign: 'center', 
@@ -109,8 +111,13 @@ export default connect(
       : undefined;
       errors.password = !values.password
         ? 'Este campo es obligatorio'
-        : values.password.length < 5
-        ? 'La contraseña debe de tener por lo menos 5 caracteres'
+        : values.password.length < 8
+        ? 'La contraseña debe de tener por lo menos 8 caracteres'
+        : undefined;
+      errors.passwordConfirm = !values.passwordConfirm
+        ? 'Debe confirmar su contraseña'
+        : values.passwordConfirm !== values.password 
+        ? 'La contraseñas ingresadas no coinciden'
         : undefined;
       errors.phoneNumber = !values.phoneNumber
         ? 'Este campo es obligatorio'
