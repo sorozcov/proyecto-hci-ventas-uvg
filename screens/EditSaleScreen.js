@@ -25,7 +25,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit }) {
             disabled={!(dirty && valid)}
             theme={roundness}
             color={'#000000'}
-            icon="login"
+            icon="cart"
             height={50}
             mode="contained"
             labelStyle={{
@@ -41,7 +41,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit }) {
               
             }}
             onPress={handleSubmit(signUp)}>
-            REGISTRARSE
+            CREAR
           </Button>
         </View>
         </ScrollView>
