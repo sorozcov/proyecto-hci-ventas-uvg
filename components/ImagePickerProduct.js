@@ -6,8 +6,8 @@ import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { ActionPicker } from 'react-native-action-picker';
 import * as firebase from "firebase";
-
-import {Avatar,Button,TextInput} from 'react-native-paper';
+import {Avatar} from 'react-native-elements';
+import {Button,TextInput} from 'react-native-paper';
 
 export const uriToBlob = (uri) => {
   return new Promise((resolve, reject) => {
@@ -33,7 +33,7 @@ export const uriToBlob = (uri) => {
 export const uploadToFirebase = (blob,uid) => {
   return new Promise((resolve, reject)=>{
     let storageRef = firebase.storage().ref();
-    let img = "UserImages/" + uid+'.jpg';
+    let img = "ProductImages/" + uid+'.jpg';
     storageRef.child(img).put(blob, {
       contentType: 'image/jpeg'
     }).then((snapshot)=>{
@@ -68,9 +68,9 @@ export default class ImagePickerUser extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         
-        {!image &&  <Avatar.Icon size={100} icon="account" color="white"  />}
-
-        {image &&  <Avatar.Image style={{alignSelf:'center'}} size={100} source={{ uri: image }}  />}
+        {!image &&  <Avatar size={200} overlayContainerStyle={{backgroundColor: '#00C331'}} icon={{name: 'image', color: 'white',type: 'material'}}  />}
+        
+        {image &&  <Avatar  size={200} source={{ uri: image }}  />}
         <Button labelStyle={{fontFamily:"dosis-bold"}} onPress={()=>this.setState({ actionPickerVisible: true })} >Cambiar Imagen</Button>
         <ActionPicker
             style={{fontFamily:"dosis-medium"}}

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { TextInput, withTheme, Text, Button } from 'react-native-paper';
 import { reduxForm, Field } from 'redux-form';
 import { ScrollView } from 'react-native-gesture-handler';
+import ImagePicker,* as imageUploadFunctions from '../components/ImagePickerProduct';
 
 import * as firebase from "firebase";
 import MyTextInput from '../components/textInput';
@@ -22,6 +23,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit }) {
     <View style={styles.container}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
         <View style={styles.formContainer}>
+          <Field name={'image'} component={ImagePicker} image={null}/>
           <Field name={'name'} component={MyTextInput} label='Nombre' placeholder='Ingresa el nombre del producto'/>
           <Field name={'description'} component={MyTextInput} label='Descripción' placeholder='Ingresa una descripción'/>
           <Field name={'price'} component={MyTextInput} label='Precio' placeholder='Ingresa el precio que tendrá el producto' keyboardType='numeric'/>

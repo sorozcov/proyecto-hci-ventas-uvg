@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { TextInput, withTheme, Text, Button ,Avatar, Modal,ActivityIndicator} from 'react-native-paper';
 import { reduxForm, Field } from 'redux-form';
 import { ScrollView } from 'react-native-gesture-handler';
-import ImagePicker from '../components/ImagePickerUser';
+import ImagePicker,* as imageUploadFunctions from '../components/ImagePickerUser';
 import * as firebase from "firebase";
 import 'firebase/firestore';
 import MyTextInput from '../components/textInput';
@@ -80,8 +80,8 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
          let uid = await firebase.auth().currentUser.uid;
          image = image!==undefined ? image : null;
          if(image!==null){
-            let blob = await uriToBlob(image);
-            await uploadToFirebase(blob,uid);
+            let blob = await imageUploadFunctions.uriToBlob(image);
+            await imageUploadFunctions.uploadToFirebase(blob,uid);
            
             image = uid;
         }
