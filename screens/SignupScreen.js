@@ -207,8 +207,8 @@ const styles = StyleSheet.create({
   textStyle:{
     textAlign: 'center', 
     fontFamily: 'dosis-semi-bold',
-    paddingTop: 15,
-    paddingBottom: 15,
+    paddingTop: 20,
+    paddingBottom: 20,
     fontSize:16
   },
   modalBackground: {

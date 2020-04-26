@@ -210,7 +210,8 @@ const styles = StyleSheet.create({
     textAlign: 'center', 
     fontFamily: 'dosis-semi-bold',
     fontSize:16,
-    paddingTop:'4%'
+    paddingTop:'4%',
+    paddingBottom:'4%'
   },
   modalBackground: {
     flex: 1,
