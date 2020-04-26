@@ -142,7 +142,7 @@ function LoginScreen({ theme, navigation }) {
           
           </Button>
         <Text style={styles.textStyle}>¿Olvidaste tu contraseña?
-          <Text style={{...styles.textStyle, color: colors.accent }} onPress={() => resetPassword(mailInput)}> Enviar correo de recuperación.</Text>
+          <Text style={{...styles.textStyle, color: colors.accent }} onPress={() => resetPassword(mailInput)}> Recuperar contraseña.</Text>
         </Text>
         </View>    
        
