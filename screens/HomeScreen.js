@@ -4,7 +4,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import {withTheme} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import ImagePicker from '../components/ImagePickerUser';
+
+import SalesStackScreen from './SalesStackScreen';
+
 
 function HomeScreen() {
   return (
@@ -55,7 +59,7 @@ function Main({theme}) {
                     style={{ marginTop: 0,paddingBottom:8 }} />
                   ),
                 }} />
-        <Tab.Screen name="Mis Ventas" component={SettingsScreen} options={{
+        <Tab.Screen name="Mis Ventas" component={SalesStackScreen} options={{
                    tabBarLabel: <Text style={{ fontSize: 12,fontFamily:'dosis-bold' }}> MIS VENTAS </Text>,
                   tabBarIcon: ({ color }) => (
                     <MaterialCommunityIcons name="shopify" color={color} size={25}
