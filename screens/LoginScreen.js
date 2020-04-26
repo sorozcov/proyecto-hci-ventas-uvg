@@ -20,10 +20,26 @@ function LoginScreen({ theme, navigation }) {
          await firebase.auth()
              .signInWithEmailAndPassword(email, pass);
    
-            console.log("Login succesfull");
+            
             setmodalVisibleIndicatorLogin(false);
          // Navigate to the Home page, the user is auto logged in
-         navigation.navigate('Home')
+         user=await firebase.auth().currentUser; 
+         if(user.emailVerified){
+            navigation.navigate('Home')
+            console.log("Login succesfull");
+         }else{
+          console.log("Verificar correo!");
+          setTimeout(function(){
+            Alert.alert(
+             "Verificar correo",
+             "Verifique su correo electrónico para ingresar a la plataforma.",
+             [
+              {text: 'Enviar correo de nuevo', onPress: () => {firebase.auth().currentUser.sendEmailVerification()}},
+               {text: 'Ok', onPress: () => {}},
+             ],
+            )},100)
+         }
+         
      } catch (error) {
          console.log(error.toString());
          setmodalVisibleIndicatorLogin(false);
@@ -31,6 +47,41 @@ function LoginScreen({ theme, navigation }) {
          Alert.alert(
           "Error",
           "Los datos ingresados no son válidos para ningún usuario.",
+          [
+            {text: 'OK', onPress: () => {}},
+          ],
+         )},100)
+     }
+   
+  }
+  async function resetPassword(email) {
+    Keyboard.dismiss();
+    setmodalVisibleIndicatorLogin(true);
+     try {
+         
+         await firebase.auth().sendPasswordResetEmail(email);
+   
+        console.log("Password reset succesfull");
+        setmodalVisibleIndicatorLogin(false);
+        setTimeout(function(){
+          Alert.alert(
+           "Recuperación Contraseña",
+           "Correo para reestablecimiento de contraseña enviado.",
+           [
+             {text: 'OK', onPress: () => {}},
+           ],
+          )},100)   
+         
+
+        
+         
+     } catch (error) {
+         console.log(error.toString());
+         setmodalVisibleIndicatorLogin(false);
+         setTimeout(function(){
+         Alert.alert(
+          "Error",
+          "Error, correo ingresado no válido.",
           [
             {text: 'OK', onPress: () => {}},
           ],
@@ -90,7 +141,9 @@ function LoginScreen({ theme, navigation }) {
             INICIAR SESIÓN
           
           </Button>
-          
+        <Text style={styles.textStyle}>¿Olvidaste tu contraseña?
+          <Text style={{...styles.textStyle, color: colors.accent }} onPress={() => resetPassword(mailInput)}> Enviar correo de recuperación.</Text>
+        </Text>
         </View>    
        
       </View>
@@ -128,6 +181,7 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     flex: 0.8,
+    paddingTop:50
   },
   bottomContainer: {
     position: 'absolute',
@@ -155,7 +209,8 @@ const styles = StyleSheet.create({
   textStyle:{
     textAlign: 'center', 
     fontFamily: 'dosis-semi-bold',
-    fontSize:16
+    fontSize:16,
+    paddingTop:'4%'
   },
   modalBackground: {
     flex: 1,

@@ -1,20 +1,131 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View,Keyboard,Alert,KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux';
-import { TextInput, withTheme, Text, Button ,Avatar, TouchableRipple} from 'react-native-paper';
+import { TextInput, withTheme, Text, Button ,Avatar, Modal,ActivityIndicator} from 'react-native-paper';
 import { reduxForm, Field } from 'redux-form';
 import { ScrollView } from 'react-native-gesture-handler';
 import ImagePicker from '../components/ImagePickerUser';
 import * as firebase from "firebase";
+import 'firebase/firestore';
 import MyTextInput from '../components/textInput';
 
-const signUp = values => {
-  console.log('submitting form', values)
+uriToBlob = (uri) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+      // return the blob
+      resolve(xhr.response);
+    };
+    
+    xhr.onerror = function() {
+      // something went wrong
+      reject(new Error('uriToBlob failed'));
+    };
+    // this helps us get a blob
+    xhr.responseType = 'blob';
+    xhr.open('GET', uri, true);
+    
+    xhr.send(null);
+  });
 }
+
+
+uploadToFirebase = (blob,uid) => {
+  return new Promise((resolve, reject)=>{
+    let storageRef = firebase.storage().ref();
+    let img = "UserImages/" + uid+'.jpg';
+    storageRef.child(img).put(blob, {
+      contentType: 'image/jpeg'
+    }).then((snapshot)=>{
+      blob.close();
+      resolve(snapshot);
+    }).catch((error)=>{
+      reject(error);
+    });
+  });
+}
+
+async function createUserCollectionFirebase ({email,name,lastName,image,phoneNumber,uid}){
+  let db = firebase.firestore();
+  let newUserDoc = db.collection('users').doc(uid);
+  return newUserDoc.set({
+    email:email, 
+    name:name,
+    lastName:lastName,
+    phoneNumber:phoneNumber,
+    uid:uid,
+    image:image
+  });
+ 
+  
+}
+
+
+
 
 function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
   const { colors, roundness } = theme;
+  const [modalVisibleIndicatorLogin, setmodalVisibleIndicatorLogin] = useState(false);
+  const signUp = values => {
+    console.log('submitting form', values)
+    signupFirebase(values)
+  
+  }
+  async function signupFirebase({email, password,name,lastName,image,phoneNumber}) {
+    Keyboard.dismiss();
+    setmodalVisibleIndicatorLogin(true);
+     try {
+         
+         await firebase.auth().createUserWithEmailAndPassword(email, password);
+         let uid = await firebase.auth().currentUser.uid;
+         image = image!==undefined ? image : null;
+         if(image!==null){
+            let blob = await uriToBlob(image);
+            await uploadToFirebase(blob,uid);
+           
+            image = uid;
+        }
+          await createUserCollectionFirebase({email,name,lastName,image,phoneNumber,uid}) 
+          await firebase.auth().currentUser.sendEmailVerification()
+         setmodalVisibleIndicatorLogin(false);
+         setTimeout(function(){
+          Alert.alert(
+           "Bienvenido " + name,
+           "Su cuenta se ha creado con éxito.",
+           [
+             {text: 'OK', onPress: () => {}},
+           ],
+          )},100)
+         // Navigate to the Home page, the user is auto logged in
+         navigation.navigate('Login')
+     } catch (error) {
+         console.log(error.toString());
+         let errorMessage = ""
+         switch(error.toString()) {
+          case "Error: The email address is already in use by another account.":
+            errorMessage="El correo ingresado ya está en uso por otro usuario."
+            break;
+
+          default:
+            errorMessage = "No se pudo crear el usuario."
+        }
+         setmodalVisibleIndicatorLogin(false);
+         setTimeout(function(){
+         Alert.alert(
+          "Error",
+          errorMessage,
+          [
+            {text: 'OK', onPress: () => {}},
+          ],
+         )},100)
+     }
+   
+  }
   return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
     <View style={styles.container}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
         <View style={styles.formContainer}>
@@ -49,11 +160,22 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
             REGISTRARSE
           </Button>
         </View>
+        <Modal
+            transparent={true}
+            animationType={'none'}
+            visible={modalVisibleIndicatorLogin}>
+            <View style={styles.modalBackground}>
+              <View style={styles.activityIndicatorWrapper}>
+              <ActivityIndicator size="large" animating={modalVisibleIndicatorLogin} color={colors.primary}/>
+              </View>
+            </View>
+        </Modal>    
         <Text style={styles.textStyle}>¿Ya tienes una cuenta?  
           <Text style={{...styles.textStyle, color: colors.accent }} onPress={() => navigation.navigate('Login') }> Inicia Sesión</Text>
         </Text>
         </ScrollView>
     </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -85,9 +207,25 @@ const styles = StyleSheet.create({
   textStyle:{
     textAlign: 'center', 
     fontFamily: 'dosis-semi-bold',
-    paddingTop: '4%',
-    paddingBottom: '4%',
+    paddingTop: 15,
+    paddingBottom: 15,
     fontSize:16
+  },
+  modalBackground: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    backgroundColor: '#00000040'
+  },
+  activityIndicatorWrapper: {
+    backgroundColor: '#FFFFFF',
+    height: 100,
+    width: 100,
+    borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around'
   }
 });
 
