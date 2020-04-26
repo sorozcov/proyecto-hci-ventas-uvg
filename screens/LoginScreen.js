@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, View,ActivityIndicator,Modal,Alert,Keyboard } from 'react-native';
-import { TextInput, withTheme, Text, Button } from 'react-native-paper';
+import { Image, StyleSheet, View,Modal,Alert,Keyboard } from 'react-native';
+import { TextInput, withTheme,ActivityIndicator ,Text, Button } from 'react-native-paper';
 import * as firebase from "firebase";
 
 
@@ -8,30 +8,83 @@ import * as firebase from "firebase";
 
 function LoginScreen({ theme, navigation }) {
   const { colors, roundness } = theme;
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisibleIndicatorLogin, setmodalVisibleIndicatorLogin] = useState(false);
   const [mailInput, changeMailInput] = useState('');
   const [password, changePassword] = useState('');
   async function login(email, pass) {
     Keyboard.dismiss();
     console.log("started");
-    setModalVisible(true);
+    setmodalVisibleIndicatorLogin(true);
      try {
          
          await firebase.auth()
              .signInWithEmailAndPassword(email, pass);
    
-            console.log("Login succesfull");
-            setModalVisible(false);
+            
+            setmodalVisibleIndicatorLogin(false);
          // Navigate to the Home page, the user is auto logged in
-         navigation.navigate('Home')
+         user=await firebase.auth().currentUser; 
+         if(user.emailVerified){
+            navigation.navigate('Home')
+            console.log("Login succesfull");
+         }else{
+          console.log("Verificar correo!");
+          setTimeout(function(){
+            Alert.alert(
+             "Verificar correo",
+             "Verifique su correo electrónico para ingresar a la plataforma.",
+             [
+              {text: 'Enviar correo de nuevo', onPress: () => {firebase.auth().currentUser.sendEmailVerification()}},
+               {text: 'Ok', onPress: () => {}},
+             ],
+            )},100)
+         }
+         
      } catch (error) {
          console.log(error.toString());
-         setModalVisible(false);
+         setmodalVisibleIndicatorLogin(false);
          setTimeout(function(){
          Alert.alert(
           "Error",
           "Los datos ingresados no son válidos para ningún usuario.",
-          []
+          [
+            {text: 'OK', onPress: () => {}},
+          ],
+         )},100)
+     }
+   
+  }
+  async function resetPassword(email) {
+    Keyboard.dismiss();
+    setmodalVisibleIndicatorLogin(true);
+     try {
+         
+         await firebase.auth().sendPasswordResetEmail(email);
+   
+        console.log("Password reset succesfull");
+        setmodalVisibleIndicatorLogin(false);
+        setTimeout(function(){
+          Alert.alert(
+           "Recuperación Contraseña",
+           "Correo para reestablecimiento de contraseña enviado.",
+           [
+             {text: 'OK', onPress: () => {}},
+           ],
+          )},100)   
+         
+
+        
+         
+     } catch (error) {
+         console.log(error.toString());
+         setmodalVisibleIndicatorLogin(false);
+         setTimeout(function(){
+         Alert.alert(
+          "Error",
+          "Error, correo ingresado no válido.",
+          [
+            {text: 'OK', onPress: () => {}},
+          ],
          )},100)
      }
    
@@ -88,7 +141,9 @@ function LoginScreen({ theme, navigation }) {
             INICIAR SESIÓN
           
           </Button>
-          
+        <Text style={styles.textStyle}>¿Olvidaste tu contraseña?
+          <Text style={{...styles.textStyle, color: colors.accent }} onPress={() => resetPassword(mailInput)}> Enviar correo de recuperación.</Text>
+        </Text>
         </View>    
        
       </View>
@@ -96,10 +151,10 @@ function LoginScreen({ theme, navigation }) {
       <Modal
         transparent={true}
         animationType={'none'}
-        visible={modalVisible}>
+        visible={modalVisibleIndicatorLogin}>
         <View style={styles.modalBackground}>
           <View style={styles.activityIndicatorWrapper}>
-          <ActivityIndicator size="large" color={colors.primary}/>
+          <ActivityIndicator size="large" animating={modalVisibleIndicatorLogin} color={colors.primary}/>
           </View>
         </View>
     </Modal>     
@@ -126,6 +181,7 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     flex: 0.8,
+    paddingTop:50
   },
   bottomContainer: {
     position: 'absolute',
@@ -153,7 +209,9 @@ const styles = StyleSheet.create({
   textStyle:{
     textAlign: 'center', 
     fontFamily: 'dosis-semi-bold',
-    fontSize:16
+    fontSize:16,
+    paddingTop:'4%',
+    paddingBottom:'4%'
   },
   modalBackground: {
     flex: 1,

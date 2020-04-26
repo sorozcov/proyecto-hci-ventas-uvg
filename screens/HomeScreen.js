@@ -5,13 +5,15 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import {withTheme} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import ImagePicker from '../components/ImagePicker';
+import ImagePicker from '../components/ImagePickerUser';
+
 import SalesStackScreen from './SalesStackScreen';
+
 
 function HomeScreen() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ImagePicker></ImagePicker>
+     
     </View>
   );
 }
