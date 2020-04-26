@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, View,Modal,Alert,Keyboard } from 'react-native';
+import { Image, StyleSheet, View,Modal,Alert,Keyboard ,KeyboardAvoidingView} from 'react-native';
 import { TextInput, withTheme,ActivityIndicator ,Text, Button } from 'react-native-paper';
 import * as firebase from "firebase";
 
@@ -90,6 +90,10 @@ function LoginScreen({ theme, navigation }) {
    
   }
   return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS == "ios" ? "padding" : "padding"}
+      style={styles.container}
+    >
     <View style={styles.container}>
       <View style={styles.topContainer}>
         <View style={{flex:0.4}}/>
@@ -168,7 +172,7 @@ function LoginScreen({ theme, navigation }) {
         </Text>
       </View>
     </View>
-    
+    </KeyboardAvoidingView>
   );
 }
 

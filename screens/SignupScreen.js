@@ -91,7 +91,7 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
          setTimeout(function(){
           Alert.alert(
            "Bienvenido " + name,
-           "Su cuenta se ha creado con éxito.",
+           "Su cuenta se ha creado con éxito. Revise su correo para verificar su cuenta.",
            [
              {text: 'OK', onPress: () => {}},
            ],
@@ -123,7 +123,7 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
   }
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      behavior={Platform.OS == "ios" ? "padding" : "padding"}
       style={styles.container}
     >
     <View style={styles.container}>
