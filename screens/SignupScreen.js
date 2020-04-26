@@ -123,7 +123,7 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
   }
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS == "ios" ? "padding" : "padding"}
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
       style={styles.container}
     >
     <View style={styles.container}>
