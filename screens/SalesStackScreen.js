@@ -12,13 +12,15 @@ function SalesStackScreen({ theme }) {
   return (
     <SalesStack.Navigator screenOptions={({ route }) => 
       ({
+        headerBackTitleVisible:false,
         headerShown: route.name === 'SalesScreen' ? false : route.name === 'EditSaleScreen' ? true : false,
         headerTitleStyle: {
           fontFamily: 'dosis-bold',
+          
         },
       })} initialRouteName="Mis Ventas">
       <SalesStack.Screen name="SalesScreen" component={SalesScreen} />
-      <SalesStack.Screen name="EditSaleScreen" options={{ title: 'NUEVA VENTA', headerTitleAlign:'center' }}component={EditSaleScreen} />
+      <SalesStack.Screen name="EditSaleScreen"   options={{ title: 'NUEVA VENTA', headerTitleAlign:'center'}} component={EditSaleScreen} />
     </SalesStack.Navigator>
   );
 }

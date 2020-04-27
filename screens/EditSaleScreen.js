@@ -6,7 +6,7 @@ import { reduxForm, Field } from 'redux-form';
 import { ScrollView } from 'react-native-gesture-handler';
 import ImagePicker,* as imageUploadFunctions from '../components/ImagePickerProduct';
 
-import * as firebase from "firebase";
+//import * as firebase from "firebase";
 import * as selectors from '../src/reducers';
 import MyTextInput from '../components/textInput';
 import PickerInput from '../components/PickerInput';
@@ -22,14 +22,14 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
       behavior={Platform.OS == "ios" ? "padding" : "height"}
       style={styles.container}
     >
-    <View style={styles.container}>
+    <View style={{...styles.container}}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
         <Field name={'image'} component={ImagePicker} image={null}/>
         <Field name={'name'} component={MyTextInput} label='Nombre' placeholder='Ingresa el nombre del producto'/>
         <Field name={'description'} component={MyTextInput} label='Descripción' placeholder='Ingresa una descripción'/>
         <Field name={'price'} component={MyTextInput} label='Precio' placeholder='Ingresa el precio que tendrá el producto' keyboardType='numeric'/>
-        <Field name={'state'} component={PickerInput} title='Estado' options={[{ label:'Nuevo', value:1 }, { label:'Usado', value:2 }]}/>
-        <Field name={'category'} component={PickerInput} title='Categoría' options={categories.map(category => ({ label:category.name, value:category.categoryid }))}/>
+        <Field name={'state'} component={PickerInput} title='Estado' single={true} selectedText="Estado" placeholderText="Seleccionar estado" options={[{ label:'Nuevo', value:"1" }, { label:'Usado', value:"2" }]} selectedItems={[]}/>
+        <Field name={'category'} component={PickerInput} title='Categoría' single={false} selectedText="Categoría" placeholderText="Seleccionar categoría" options={categories.map(category => ({ label:category.name, value:category.categoryid }))} selectedItems={[]}/>
         <Button
           disabled={!(dirty && valid)}
           theme={roundness}

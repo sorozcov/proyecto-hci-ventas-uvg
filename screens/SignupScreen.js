@@ -140,6 +140,7 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
         </Text>
         </ScrollView>
     </View>
+   
     </KeyboardAvoidingView>
   );
 }

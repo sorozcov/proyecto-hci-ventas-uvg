@@ -90,13 +90,13 @@ export default class ImagePickerUser extends React.Component {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (status !== 'granted') {
-        alert('Sorry, we need camera roll permissions to make this work!');
+        alert('Lo siento, necesitamos permisos de la cámara para funcionar.!');
       }
     }
     if (Constants.platform.ios) {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
         if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
+          alert('Lo siento, necesitamos permisos de la cámara para funcionar.!');
         }
       }
     
