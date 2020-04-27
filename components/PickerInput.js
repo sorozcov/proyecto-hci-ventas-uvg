@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View,Picker as PickerIOS } from 'react-native';
 import {  Text } from 'react-native-paper';
-import {Picker, PickerIOS} from '@react-native-community/picker';
+import {Picker} from '@react-native-community/picker';
 
 
 export default function PickerInput(props) {
@@ -13,6 +13,7 @@ export default function PickerInput(props) {
       {Platform.OS == "ios" ?
         <PickerIOS
           selectedValue={input.value}
+          mode="modal"
           itemStyle={styles.inputContainerStyle}
           onValueChange={input.onChange}>
           {inputProps.options.map(item => (

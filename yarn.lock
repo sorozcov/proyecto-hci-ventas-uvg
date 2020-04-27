@@ -1577,10 +1577,9 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.6.tgz#c7f2ac187c1f25aa8c30d11baa8f4398eca3bb84"
   integrity sha512-PpMoeXwPUoldCRKDuSi+zK5rT+sJTW6ri6RdGPkSKRzU77Q1d9IaR0O5IKvBj0XSdL3p+dcOa05gk35aGDffBQ==
 
-"@react-native-community/picker@^1.3.0":
+"@react-native-community/picker@react-native-community/react-native-picker":
   version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@react-native-community/picker/-/picker-1.3.0.tgz#74be7dd93c54426677ddd68080ca253906a57e07"
-  integrity sha512-ak4CU6IkpNmXeAt+A4stCr/GLAli/o+5NOREH2YxybBUY0Z8pyf+WPzDL5QQdl1DsyO8wsC5J1pnbrm9NAVKmQ==
+  resolved "https://codeload.github.com/react-native-community/react-native-picker/tar.gz/c0fdb5d2c89c33b89df245f3046689a00ccd692f"
 
 "@react-navigation/bottom-tabs@^5.0.0":
   version "5.2.7"
@@ -6357,6 +6356,13 @@ react-native-action-picker@^1.0.2:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-collapse-view@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-collapse-view/-/react-native-collapse-view-1.0.0.tgz#6f730aceb2ecfeecc6ff8b265ba05c4aee63a2ef"
+  integrity sha1-b3MKzrLs/uzG/4smW6BcSu5jou8=
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-elements@^1.2.7:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-1.2.7.tgz#1eca2db715c41722aeb67aea62bd2a4621adb134"
@@ -6390,6 +6396,13 @@ react-native-image-picker@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-2.3.1.tgz#1977b65e07793d2c0b2d1976fb675c5f75ad7f11"
   integrity sha512-c/a2h7/T7yBo5KlNQhcSn4xf4+6Li6LfJ59+GZT1ZzzWrj/6X8DiJ/TJBOlOZMC5tJriZKuRkWSsr74k6z+brw==
+
+react-native-ios-picker@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-ios-picker/-/react-native-ios-picker-1.0.0.tgz#a2cdf43871b4c932dda9758a50d2c2c4dad02c86"
+  integrity sha512-/QDeij2wxGWwPD9EaFqHXdfB7zQsxHpknBqH5Mxmnetj3zQPZ4OzQf2k+WM+9MYXZUyIsMKGb2NBvHP5MIkLOA==
+  dependencies:
+    react-native-collapse-view "1.0.0"
 
 react-native-iphone-x-helper@^1.2.1:
   version "1.2.1"
