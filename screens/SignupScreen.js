@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, View,Keyboard,Alert,KeyboardAvoidingView } from 'react-native';
-import { connect } from 'react-redux';
 import { TextInput, withTheme, Text, Button ,Avatar, Modal,ActivityIndicator} from 'react-native-paper';
 import { reduxForm, Field } from 'redux-form';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -195,10 +194,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(
-  undefined,
-  undefined,
-)(reduxForm({ 
+export default reduxForm({ 
   form: 'signUp',
   validate: (values) => {
     const errors = {};
@@ -231,4 +227,4 @@ export default connect(
 
     return errors;
   }
-})(withTheme(SignupScreen)));
+})(withTheme(SignupScreen));

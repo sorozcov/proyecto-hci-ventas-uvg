@@ -5,9 +5,10 @@ import { withTheme, Text, Button } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import * as firebase from "firebase";
+import * as actionsCategories from '../src/actions/categories';
 
 
-function SalesScreen({ theme, navigation }) {
+function SalesScreen({ theme, navigation, onClick }) {
   const { colors, roundness } = theme;
   return (
     <View style={styles.container}>

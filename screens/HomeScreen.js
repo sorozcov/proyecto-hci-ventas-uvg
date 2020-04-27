@@ -36,7 +36,7 @@ function AnotherScreen() {
 
 const Tab = createMaterialBottomTabNavigator();
 
-function Main({theme}) {
+function Main({theme, navigation}) {
   const {colors} = theme;
   return (
     

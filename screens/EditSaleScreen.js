@@ -7,13 +7,15 @@ import { ScrollView } from 'react-native-gesture-handler';
 import ImagePicker,* as imageUploadFunctions from '../components/ImagePickerProduct';
 
 import * as firebase from "firebase";
+import * as selectors from '../src/reducers';
 import MyTextInput from '../components/textInput';
+import PickerInput from '../components/PickerInput';
 
 const signUp = values => {
   console.log('submitting form', values)
 }
 
-function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit }) {
+function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categories }) {
   const { colors, roundness } = theme;
   return (
     <KeyboardAvoidingView
@@ -22,35 +24,35 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit }) {
     >
     <View style={styles.container}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <View style={styles.formContainer}>
-          <Field name={'image'} component={ImagePicker} image={null}/>
-          <Field name={'name'} component={MyTextInput} label='Nombre' placeholder='Ingresa el nombre del producto'/>
-          <Field name={'description'} component={MyTextInput} label='Descripción' placeholder='Ingresa una descripción'/>
-          <Field name={'price'} component={MyTextInput} label='Precio' placeholder='Ingresa el precio que tendrá el producto' keyboardType='numeric'/>
-          <Button
-            disabled={!(dirty && valid)}
-            theme={roundness}
-            color={'#000000'}
-            icon="cart"
-            height={50}
-            mode="contained"
-            labelStyle={{
-              fontFamily:"dosis-bold",
-              fontSize: 15,
-            }}
-            style={{
-              fontFamily: 'dosis',
-              marginLeft: '5%',
-              marginRight: '5%',
-              marginTop:'4%',
-              justifyContent: 'center',            
-              
-            }}
-            onPress={handleSubmit(signUp)}>
-            CREAR
-          </Button>
-        </View>
-        </ScrollView>
+        <Field name={'image'} component={ImagePicker} image={null}/>
+        <Field name={'name'} component={MyTextInput} label='Nombre' placeholder='Ingresa el nombre del producto'/>
+        <Field name={'description'} component={MyTextInput} label='Descripción' placeholder='Ingresa una descripción'/>
+        <Field name={'price'} component={MyTextInput} label='Precio' placeholder='Ingresa el precio que tendrá el producto' keyboardType='numeric'/>
+        <Field name={'state'} component={PickerInput} title='Estado' options={[{ label:'Nuevo', value:1 }, { label:'Usado', value:2 }]}/>
+        <Field name={'category'} component={PickerInput} title='Categoría' options={categories.map(category => ({ label:category.name, value:category.categoryid }))}/>
+        <Button
+          disabled={!(dirty && valid)}
+          theme={roundness}
+          color={'#000000'}
+          icon="cart"
+          height={50}
+          mode="contained"
+          labelStyle={{
+            fontFamily:"dosis-bold",
+            fontSize: 15,
+          }}
+          style={{
+            fontFamily: 'dosis',
+            marginLeft: '5%',
+            marginRight: '5%',
+            marginTop:'4%',
+            justifyContent: 'center',            
+            
+          }}
+          onPress={handleSubmit(signUp)}>
+          CREAR
+        </Button>
+      </ScrollView>
     </View>
     </KeyboardAvoidingView>
   );
@@ -65,6 +67,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: '5%',
+    paddingBottom: '5%',
   },
   inputContainerStyle: {
     margin: 8,
@@ -89,8 +92,12 @@ const styles = StyleSheet.create({
   }
 });
 
+
+
 export default connect(
-  undefined,
+  state => ({
+    categories: selectors.getCategories(state),
+  }),
   undefined,
 )(reduxForm({ 
   form: 'signUp',

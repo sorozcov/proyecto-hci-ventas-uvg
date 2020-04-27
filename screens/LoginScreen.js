@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, View,Modal,Alert,Keyboard ,KeyboardAvoidingView} from 'react-native';
 import { TextInput, withTheme,ActivityIndicator ,Text, Button } from 'react-native-paper';
+import { connect } from 'react-redux';
 import * as firebase from "firebase";
 
+import * as actionsLoggedUser from '../src/actions/loggedUser';
+import * as actionsCategories from '../src/actions/categories';
 
 
-
-function LoginScreen({ theme, navigation }) {
+function LoginScreen({ theme, navigation, saveLoggedUser }) {
   const { colors, roundness } = theme;
   const [modalVisibleIndicatorLogin, setmodalVisibleIndicatorLogin] = useState(false);
   const [mailInput, changeMailInput] = useState('');
@@ -25,7 +27,7 @@ function LoginScreen({ theme, navigation }) {
          // Navigate to the Home page, the user is auto logged in
          user=await firebase.auth().currentUser; 
          if(user.emailVerified){
-            navigation.navigate('Home')
+            saveLoggedUser(navigation,user)
             console.log("Login succesfull");
          }else{
           console.log("Verificar correo!");
@@ -235,4 +237,18 @@ const styles = StyleSheet.create({
   }
 });
 
-export default withTheme(LoginScreen);
+export default connect(
+  undefined,
+  dispatch => ({
+    async saveLoggedUser(navigation,user) {
+      //Se cargan las categorias
+      dispatch(actionsCategories.clearCategories());
+      const categories = await firebase.firestore().collection('categories').get();
+      categories.docs.map(doc=> dispatch(actionsCategories.addCategory(doc.data())));
+      //Se cargan los usuarios
+      const userLoggedIn = await firebase.firestore().collection('users').doc(user.uid).get();
+      dispatch(actionsLoggedUser.login(userLoggedIn.data()));
+      navigation.navigate('Home');
+    },
+  }),
+)(withTheme(LoginScreen));
