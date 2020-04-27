@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import {  Text } from 'react-native-paper';
-import {Picker} from '@react-native-community/picker';
+import {Picker, PickerIOS} from '@react-native-community/picker';
 
 
 export default function PickerInput(props) {
@@ -10,6 +10,16 @@ export default function PickerInput(props) {
   return (
     <View style={styles.container}>
       <View style={styles.pickerContainer}>
+      {Platform.OS == "ios" ?
+        <PickerIOS
+          selectedValue={input.value}
+          itemStyle={styles.inputContainerStyle}
+          onValueChange={input.onChange}>
+          {inputProps.options.map(item => (
+            <PickerIOS.Item key={item.value} label={item.label} value={item.value} />
+          ))}
+        </PickerIOS>  
+      : 
         <Picker
           selectedValue={input.value}
           style={styles.inputContainerStyle}
@@ -18,7 +28,8 @@ export default function PickerInput(props) {
           {inputProps.options.map(item => (
             <Picker.Item key={item.value} label={item.label} value={item.value} />
           ))}
-        </Picker>
+        </Picker>}
+        
       </View>
     </View>
   );
