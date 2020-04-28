@@ -203,8 +203,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   logoImage: {
-    width: 120,
-    height: 120,
+    width: 150,
+    height: 150,
     resizeMode: 'contain',
   },
   inputContainerStyle: {

@@ -20,6 +20,8 @@ export default function MyTextInput(props) {
         placeholder={inputProps.placeholder}
         keyboardType={inputProps.keyboardType}
         secureTextEntry={inputProps.secureTextEntry}
+        
+        
         />
       {meta.touched && (meta.error && <Text style={styles.textError}>{meta.error}</Text>)}
     </View>
@@ -32,6 +34,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 10,
+    fontFamily:'dosis-semi-bold'
   },
   textError: {
     color: 'red',
