@@ -26,14 +26,16 @@ function SalesScreen({ theme, navigation, onClick }) {
           fontFamily: 'dosis',
           marginLeft: '5%',
           marginRight: '5%',
-          justifyContent: 'center',            
+          justifyContent: 'center', 
+          marginTop:15             
           
         }}
         onPress={() => navigation.navigate('EditSaleScreen')}>
         NUEVA VENTA
       </Button>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        
+         
+
       </ScrollView>
     </View>
   );
@@ -46,6 +48,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#fff',
     fontFamily: 'dosis-regular',
+    
   },
   contentContainer: {
     paddingTop: 30,

@@ -8,23 +8,10 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import ImagePicker from '../components/ImagePickerUser';
 
 import SalesStackScreen from './SalesStackScreen';
+import ExploreScreen from './ExploreScreen';
 
 
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-     
-    </View>
-  );
-}
 
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
 
 function AnotherScreen() {
   return (
@@ -44,12 +31,14 @@ function Main({theme, navigation}) {
         initialRouteName="Home"
         activeColor="#f0edf6"
         inactiveColor="#000000"
-       
+        keyboardHidesTabBar={true}
         shifting={false}
-        barStyle={{ backgroundColor: colors.primary ,paddingBottom:10,paddingTop:12,fontSize:'30px'}}
+        
+        
+        barStyle={{ backgroundColor: colors.primary ,paddingBottom:10,paddingTop:10,fontSize:'30px'}}
       >
        
-        <Tab.Screen name="Explorar"  component={HomeScreen}
+        <Tab.Screen name="Explorar"  component={ExploreScreen}
                 options={{
                   tabBarLabel: <Text style={{ fontSize: 12,fontFamily:'dosis-bold' }}> EXPLORAR </Text>,
                   
