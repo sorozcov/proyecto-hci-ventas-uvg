@@ -69,7 +69,7 @@ function ExploreScreen({ theme, navigation, onClick }) {
           numColumns={indexShowTab+1}
           keyExtractor={(item, index) => item.id }
           renderItem={(item) => (
-            <CardComponent indexShowTab={indexShowTab} sale={{}}/>
+            <CardComponent indexShowTab={indexShowTab} sale={{}} onCardClick={null}/>
            )
   
           }

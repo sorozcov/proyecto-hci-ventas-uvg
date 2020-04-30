@@ -1,13 +1,22 @@
-import * as React from 'react';
-import { Card,Paragraph,IconButton } from 'react-native-paper';
-import { StyleSheet,View } from 'react-native';
+import  React,{useState} from 'react';
+import { Card,Paragraph,IconButton,Button} from 'react-native-paper';
+import { StyleSheet, View,Text } from 'react-native';
+import Modal from 'react-native-modal';
+import { change } from 'redux-form';
 
 export default function CardSale(props) {
   const {indexShowTab,sale} = props;
+  let {onCardClick} = props;
   const {productName,description,price,phoneNumber,name} = sale;
+  const [showModalInformation, changeShowModalInformation] = useState(false);
+  if(onCardClick==null || onCardClick==undefined){
+      onCardClick = function(){
+            changeShowModalInformation(!showModalInformation);
+      }
+  }
   return (
-     
-        <Card style={{ margin: '1.1%',flex:0.5,backgroundColor:'white',elevation:10  }}>
+        <View style={{flex:1}}> 
+        <Card onPress={()=> onCardClick()} style={{ margin: '1.1%',flex:0.5,backgroundColor:'white',elevation:10  }}>
         <Card.Title
             
             title={"Nombre Producto"}
@@ -52,6 +61,25 @@ export default function CardSale(props) {
         
         
         </Card>
+        <Modal
+        testID={'modal'}
+        onBackdropPress={()=>onCardClick()} 
+        isVisible={showModalInformation}
+        backdropColor="#ACDCF1"
+        backdropOpacity={0.8}
+        animationIn="zoomInDown"
+        animationOut="zoomOutUp"
+        animationInTiming={600}
+        animationOutTiming={600}
+        backdropTransitionInTiming={600}
+        backdropTransitionOutTiming={600}>
+        
+            <View style={styles.content}>
+                <Text style={styles.contentTitle}>Hi 👋!</Text>
+                <IconButton testID={'close-button'}  icon="close"  size={30} style={{top:3,right:3,position:'absolute'}} mode="contained" onPress={()=>onCardClick()}  />
+            </View>
+        </Modal>
+    </View> 
     )
 }
 
@@ -86,4 +114,18 @@ const styles = StyleSheet.create({
       right: 0,
       bottom: 0,
     },
+    content: {
+        backgroundColor: 'white',
+        padding: 22,
+        height:'83%',
+        
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 4,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+      },
+      contentTitle: {
+        fontSize: 20,
+        marginBottom: 12,
+      },
   });
