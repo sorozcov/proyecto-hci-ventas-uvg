@@ -42,7 +42,6 @@ function Main({theme, navigation}) {
                 options={{
                   tabBarLabel: <Text style={{ fontSize: 12,fontFamily:'dosis-bold' }}> EXPLORAR </Text>,
                   
-                  
                   tabBarIcon: ({ color }) => (
                     <MaterialCommunityIcons name="cart" color={color} size={25}
                     style={{ marginTop: 0,paddingBottom:8 }} />

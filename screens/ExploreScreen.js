@@ -88,7 +88,7 @@ function ExploreScreen({ theme, navigation, onClick }) {
               icon="whatsapp"
               color={"white"}
               style={{backgroundColor:"green",flex:0.35}}
-              size={24}
+              size={(indexShowTab==0 ? 25 : 21)}
               onPress={() => {
                 let url = 'whatsapp://send?text=' + "Hola, vi tu producto en UVGet y estoy interesado." + '&phone=502' + "58508720";
                 Linking.openURL(url).then((data) => {
@@ -102,7 +102,7 @@ function ExploreScreen({ theme, navigation, onClick }) {
               icon="bookmark"
               color={"white"}
               style={{backgroundColor:"#03A9F4",flex:0.35}}
-              size={24}
+              size={(indexShowTab==0 ? 25 : 21)}
               onPress={() => console.log('Pressed')}
             />
             </View>
