@@ -1,17 +1,28 @@
 import React ,{useState}from 'react';
-import { Image, StyleSheet, View,Linking,SafeAreaView } from 'react-native';
+import { Image, StyleSheet, View,Linking,SafeAreaView ,FlatList} from 'react-native';
 import { connect } from 'react-redux';
-import { withTheme, Text, Button,Card,Avatar,Title, Paragraph,FAB,Portal  } from 'react-native-paper';
+import { withTheme, Text, Button,Card,Avatar,Title, Paragraph,FAB,IconButton  } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import SegmentedControlTab from "react-native-segmented-control-tab";
 import * as firebase from "firebase";
 import * as actionsCategories from '../src/actions/categories';
+import { MaterialCommunityIcons } from 'react-native-vector-icons/MaterialCommunityIcons';
+
+const renderValueWithImage = function(text, imageUri) {
+  return (
+    <Text> 
+      <MaterialCommunityIcons name="cart" color={'black'} size={25}
+                    style={{ marginTop: 0,paddingBottom:8 }} />
+      {text}
+    </Text>
+    )
+}
 
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />;
 const RightContent = props => <FAB {...props} small style={{marginRight:10,backgroundColor:"white",color:'black'}} icon="whatsapp"onPress={() => console.log('Pressed')}/>;
 function ExploreScreen({ theme, navigation, onClick }) {
   const { colors, roundness } = theme;
-  const [fabOpen, changeFabOpen] = useState(false);
+  const [indexShowTab, changeIndexShowTab] = useState(1);
   return (
     <View style={styles.container}>
       <Button
@@ -36,181 +47,75 @@ function ExploreScreen({ theme, navigation, onClick }) {
         onPress={() => navigation.navigate('EditSaleScreen')}>
         NUEVA VENTA
       </Button>
+      <SegmentedControlTab
+          values={[ "1 por Columna" , "2 por Columna"]}
+          activeTabStyle={{backgroundColor:colors.primary}}
+          tabsContainerStyle={{paddingTop:8,marginRight:"10%",marginLeft:"10%"}}
+          tabTextStyle={{fontFamily:'dosis-semi-bold',color:'black'}}
+          tabStyle={{borderColor:'black'}}
+          selectedIndex={indexShowTab}
+          badges={["1","2"]}
+          onTabPress={changeIndexShowTab}
+          tabBadgeContainerStyle={{backgroundColor:'black'}}
+        />
+      
+     
       <ScrollView style={styles.containerScrollView} contentContainerStyle={styles.contentContainer}>
-      <View style={{ flexDirection: 'column',justifyContent:"space-evenly" }}>
+      <View style={{ flexDirection: 'column',justifyContent:"space-evenly",flex:1}}>
+      <FlatList style={{margin:5}}
+          data={[{id:1},{id:2},{id:3},{id:4}]}
+          key={indexShowTab+1} 
+          numColumns={indexShowTab+1}
+          keyExtractor={(item, index) => item.id }
+          renderItem={(item) => ( <Card style={{ margin: '1.5%',flex:0.5,backgroundColor:'white',elevation:10  }}>
+          <Card.Title
+            //style={{backgroundColor:'black'}}
+            title="Nombre Producto"
+            titleStyle={{fontFamily:"dosis-bold",color:'black'}}
+            subtitle="Descripción"
+            subtitleStyle={{fontFamily:'dosis-semi-bold',color:'black'}}
+            //right={RightContent}
+          >
             
-            <View style={{ flexDirection: 'row',justifyContent:"space-evenly",flex:0.2 }}>
-              <Card style={{ margin: '1%',flex:0.9,backgroundColor:'white',elevation:10  }}>
-                <Card.Title
-                  //style={{backgroundColor:'black'}}
-                  title="Nombre Producto"
-                  titleStyle={{fontFamily:"dosis-bold",color:'black'}}
-                  subtitle="Descripción"
-                  subtitleStyle={{fontFamily:'dosis-semi-bold',color:'black'}}
-                  //right={RightContent}
-                >
-                  
-                </Card.Title>
-               
-                <Card.Cover style={{resizeMode: 'contain'}}source={{ uri: 'https://i.ytimg.com/vi/8Qqo6EWH5cI/hqdefault.jpg' }} />
-                <Card.Content >
-                
-                  <Paragraph style={{fontFamily:"dosis-bold",color:'black',fontSize:18,marginTop:10,marginBottom:20}}>GTQ PRECIO</Paragraph>
-                  <FAB
-                      style={styles.littleFab}
-                      small
-                      icon="whatsapp"
-                      onPress={() => {
-                        let url = 'whatsapp://send?text=' + "Hola, vi tu producto en UVGet y estoy interesado." + '&phone=502' + "58508720";
-                        Linking.openURL(url).then((data) => {
-                          console.log('WhatsApp Opened');
-                        }).catch(() => {
-                          alert('Whatsapp no está instalado en su teléfono.');
-                        });
-                      }}
-                    />
-                    <FAB
-                      style={styles.littleFab2}
-                      small
-                      icon="bookmark"
-                      onPress={() => console.log('Pressed')}
-                    />
-                  
-                   
-                    
-                </Card.Content>
-                
-                
-              </Card>
-              <Card style={{ margin: '1%',flex:0.9,backgroundColor:'white',elevation:10  }}>
-                <Card.Title
-                  //style={{backgroundColor:'black'}}
-                  title="Nombre Producto"
-                  titleStyle={{fontFamily:"dosis-bold",color:'black'}}
-                  subtitle="Descripción"
-                  subtitleStyle={{fontFamily:'dosis-semi-bold',color:'black'}}
-                  //right={RightContent}
-                >
-                  
-                </Card.Title>
-               
-                <Card.Cover style={{resizeMode: 'contain'}}source={{ uri: 'https://i.ytimg.com/vi/8Qqo6EWH5cI/hqdefault.jpg' }} />
-                <Card.Content >
-                
-                  <Paragraph style={{fontFamily:"dosis-bold",color:'black',fontSize:18,marginTop:10,marginBottom:20}}>GTQ PRECIO</Paragraph>
-                  
-                  <FAB
-                      style={styles.fab}
-                      small
-                      icon="whatsapp"
-                      onPress={() => {
-                        let url = 'whatsapp://send?text=' + "Hola, vi tu producto en UVGet y estoy interesado." + '&phone=502' + "58508720";
-                        Linking.openURL(url).then((data) => {
-                          console.log('WhatsApp Opened');
-                        }).catch(() => {
-                          alert('Whatsapp no está instalado en su teléfono.');
-                        });
-                      }}
-                    />
-                    <FAB
-                      style={styles.fab2}
-                      small
-                      icon="bookmark"
-                      onPress={() => console.log('Pressed')}
-                    />
-                    
-                </Card.Content>
-                
-                
-              </Card>
-              
+          </Card.Title>
+         
+          <Card.Cover style={{resizeMode: 'contain'}}source={{ uri: 'https://i.ytimg.com/vi/8Qqo6EWH5cI/hqdefault.jpg' }} />
+          <Card.Content >
+            <View style={{flex:1,flexDirection:'row'}}>
+            <Paragraph style={{fontFamily:"dosis-bold",flex:0.7,color:'black',fontSize:18,marginTop:10,marginBottom:20,paddingRight:10}}>GTQ PRECIO</Paragraph>
+           
+            <IconButton
+              icon="whatsapp"
+              color={"white"}
+              style={{backgroundColor:"green",flex:0.35}}
+              size={24}
+              onPress={() => {
+                let url = 'whatsapp://send?text=' + "Hola, vi tu producto en UVGet y estoy interesado." + '&phone=502' + "58508720";
+                Linking.openURL(url).then((data) => {
+                  console.log('WhatsApp Opened');
+                }).catch(() => {
+                  alert('Whatsapp no está instalado en su teléfono.');
+                });
+              }}
+            />
+            <IconButton
+              icon="bookmark"
+              color={"white"}
+              style={{backgroundColor:"#03A9F4",flex:0.35}}
+              size={24}
+              onPress={() => console.log('Pressed')}
+            />
             </View>
-            <View style={{ flexDirection: 'column',justifyContent:"space-evenly",flex:0.2 }}>
-              <Card style={{ margin: '1%',flex:0.9,backgroundColor:'white',elevation:10  }}>
-                <Card.Title
-                  //style={{backgroundColor:'black'}}
-                  title="Nombre Producto"
-                  titleStyle={{fontFamily:"dosis-bold",color:'black'}}
-                  subtitle="Descripción"
-                  subtitleStyle={{fontFamily:'dosis-semi-bold',color:'black'}}
-                  //right={RightContent}
-                >
-                  
-                </Card.Title>
-               
-                <Card.Cover style={{resizeMode: 'contain'}}source={{ uri: 'https://i.ytimg.com/vi/8Qqo6EWH5cI/hqdefault.jpg' }} />
-                <Card.Content >
-                
-                  <Paragraph style={{fontFamily:"dosis-bold",color:'black',fontSize:18,marginTop:10,marginBottom:20}}>GTQ PRECIO</Paragraph>
-                  
-                  <FAB
-                      style={styles.fab}
-                      small
-                      icon="whatsapp"
-                      onPress={() => {
-                        let url = 'whatsapp://send?text=' + "Hola, vi tu producto en UVGet y estoy interesado." + '&phone=502' + "58508720";
-                        Linking.openURL(url).then((data) => {
-                          console.log('WhatsApp Opened');
-                        }).catch(() => {
-                          alert('Whatsapp no está instalado en su teléfono.');
-                        });
-                      }}
-                    />
-                    <FAB
-                      style={styles.fab2}
-                      small
-                      icon="bookmark"
-                      onPress={() => console.log('Pressed')}
-                    />
-                    
-                </Card.Content>
-                
-                
-              </Card>
-              <Card style={{ margin: '1%',flex:0.9,backgroundColor:'white',elevation:10  }}>
-                <Card.Title
-                  //style={{backgroundColor:'black'}}
-                  title="Nombre Producto"
-                  titleStyle={{fontFamily:"dosis-bold",color:'black'}}
-                  subtitle="Descripción"
-                  subtitleStyle={{fontFamily:'dosis-semi-bold',color:'black'}}
-                  //right={RightContent}
-                >
-                  
-                </Card.Title>
-               
-                <Card.Cover style={{resizeMode: 'contain'}}source={{ uri: 'https://i.ytimg.com/vi/8Qqo6EWH5cI/hqdefault.jpg' }} />
-                <Card.Content >
-                
-                  <Paragraph style={{fontFamily:"dosis-bold",color:'black',fontSize:18,marginTop:10,marginBottom:20}}>GTQ PRECIO</Paragraph>
-                  
-                  <FAB
-                      style={styles.fab}
-                      small
-                      icon="whatsapp"
-                      onPress={() => {
-                        let url = 'whatsapp://send?text=' + "Hola, vi tu producto en UVGet y estoy interesado." + '&phone=502' + "58508720";
-                        Linking.openURL(url).then((data) => {
-                          console.log('WhatsApp Opened');
-                        }).catch(() => {
-                          alert('Whatsapp no está instalado en su teléfono.');
-                        });
-                      }}
-                    />
-                    <FAB
-                      style={styles.fab2}
-                      small
-                      icon="bookmark"
-                      onPress={() => console.log('Pressed')}
-                    />
-                    
-                </Card.Content>
-                
-                
-              </Card>
+             
               
-            </View>
-            
+          </Card.Content>
+          
+          
+        </Card>)
+  
+          }
+          />
+           
             
            
           </View>

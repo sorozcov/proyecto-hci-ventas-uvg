@@ -1,7 +1,7 @@
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View ,FlatList} from 'react-native';
 import { connect } from 'react-redux';
-import { withTheme, Text, Button } from 'react-native-paper';
+import { withTheme, Text, Button,Card,FAB,Paragraph } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import * as firebase from "firebase";
@@ -34,7 +34,7 @@ function SalesScreen({ theme, navigation, onClick }) {
         NUEVA VENTA
       </Button>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-         
+
 
       </ScrollView>
     </View>
