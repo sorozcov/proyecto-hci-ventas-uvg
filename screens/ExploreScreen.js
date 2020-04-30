@@ -62,18 +62,18 @@ function ExploreScreen({ theme, navigation, onClick }) {
      
       <ScrollView style={styles.containerScrollView} contentContainerStyle={styles.contentContainer}>
       <View style={{ flexDirection: 'column',justifyContent:"space-evenly",flex:1}}>
-      <FlatList style={{margin:5}}
+      <FlatList style={{margin:0}}
           data={[{id:1},{id:2},{id:3},{id:4}]}
           key={indexShowTab+1} 
           numColumns={indexShowTab+1}
           keyExtractor={(item, index) => item.id }
-          renderItem={(item) => ( <Card style={{ margin: '1.5%',flex:0.5,backgroundColor:'white',elevation:10  }}>
+          renderItem={(item) => ( <Card style={{ margin: '1.1%',flex:0.5,backgroundColor:'white',elevation:10  }}>
           <Card.Title
             //style={{backgroundColor:'black'}}
             title="Nombre Producto"
-            titleStyle={{fontFamily:"dosis-bold",color:'black'}}
+            titleStyle={{fontFamily:"dosis-bold",color:'black',fontSize:indexShowTab==0 ? 21 : 16.5}}
             subtitle="Descripción"
-            subtitleStyle={{fontFamily:'dosis-semi-bold',color:'black'}}
+            subtitleStyle={{fontFamily:'dosis-semi-bold',color:'black',fontSize:indexShowTab==0 ? 14 : 12}}
             //right={RightContent}
           >
             
@@ -82,13 +82,13 @@ function ExploreScreen({ theme, navigation, onClick }) {
           <Card.Cover style={{resizeMode: 'contain'}}source={{ uri: 'https://i.ytimg.com/vi/8Qqo6EWH5cI/hqdefault.jpg' }} />
           <Card.Content >
             <View style={{flex:1,flexDirection:'row'}}>
-            <Paragraph style={{fontFamily:"dosis-bold",flex:0.7,color:'black',fontSize:18,marginTop:10,marginBottom:20,paddingRight:10}}>GTQ PRECIO</Paragraph>
+            <Paragraph style={{fontFamily:"dosis-bold",flex:0.7,color:'black',fontSize:indexShowTab==0 ? 18 : 15,marginTop:10,marginBottom:20,paddingRight:10}}>GTQ PRECIO</Paragraph>
            
             <IconButton
               icon="whatsapp"
               color={"white"}
               style={{backgroundColor:"green",flex:0.35}}
-              size={(indexShowTab==0 ? 25 : 21)}
+              size={(indexShowTab==0 ? 25 : 17)}
               onPress={() => {
                 let url = 'whatsapp://send?text=' + "Hola, vi tu producto en UVGet y estoy interesado." + '&phone=502' + "58508720";
                 Linking.openURL(url).then((data) => {
@@ -102,7 +102,7 @@ function ExploreScreen({ theme, navigation, onClick }) {
               icon="bookmark"
               color={"white"}
               style={{backgroundColor:"#03A9F4",flex:0.35}}
-              size={(indexShowTab==0 ? 25 : 21)}
+              size={(indexShowTab==0 ? 25 : 17)}
               onPress={() => console.log('Pressed')}
             />
             </View>
