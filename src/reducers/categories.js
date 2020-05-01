@@ -18,7 +18,7 @@ const order = (state = [], action) => {
   }
 };
 
-const byId = (state = [], action) => {
+const byId = (state = {}, action) => {
   switch (action.type) {
     case types.CATEGORY_ADDED: {
       return {
@@ -27,7 +27,7 @@ const byId = (state = [], action) => {
       };
     }
     case types.CATEGORIES_CLEAR: {
-      const newState = [];
+      const newState = {};
       return newState;
     }
     default: {
