@@ -115,6 +115,8 @@ function LoginScreen({ theme, navigation, saveLoggedUser }) {
             placeholder="Ingresa tu correo"
             value={mailInput}
             onChangeText={changeMailInput}
+            returnKeyType={ "done" }
+            
           />
           <TextInput
             style={styles.inputContainerStyle}
@@ -124,6 +126,7 @@ function LoginScreen({ theme, navigation, saveLoggedUser }) {
             value={password}
             onChangeText={changePassword}
             secureTextEntry={true}
+            returnKeyType={ "done" }
           />
           <Button
             theme={roundness}

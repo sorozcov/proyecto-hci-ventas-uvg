@@ -8,6 +8,7 @@ import * as firebase from "firebase";
 import * as actionsCategories from '../src/actions/categories';
 import { MaterialCommunityIcons } from 'react-native-vector-icons/MaterialCommunityIcons';
 import CardComponent from '../components/CardComponent';
+import { Random } from 'expo';
 
 const renderValueWithImage = function(text, imageUri) {
   return (
@@ -24,6 +25,8 @@ const RightContent = props => <FAB {...props} small style={{marginRight:10,backg
 function ExploreScreen({ theme, navigation, onClick }) {
   const { colors, roundness } = theme;
   const [indexShowTab, changeIndexShowTab] = useState(1);
+  const [data, changeData] = useState([{id:1},{id:2},{id:3},{id:4}]);
+
   return (
     <View style={styles.container}>
       <Button
@@ -61,24 +64,35 @@ function ExploreScreen({ theme, navigation, onClick }) {
         />
       
      
-      <ScrollView style={styles.containerScrollView} contentContainerStyle={styles.contentContainer}>
-      <View style={{ flexDirection: 'column',justifyContent:"space-evenly",flex:1}}>
+      <View 
+
+       style={styles.containerScrollView} >
+      <View style={{...styles.contentContainer, flexDirection: 'column',justifyContent:"space-evenly",flex:1}} >
       <FlatList style={{margin:0}}
-          data={[{id:1},{id:2},{id:3},{id:4}]}
+          data={data}
           key={indexShowTab+1} 
           numColumns={indexShowTab+1}
           keyExtractor={(item, index) => item.id }
+          onEndReachedThreshold={0.1}
+          onEndReached={()=>
+            {
+              let myData = [...data]; 
+              myData.push({id:Math.random()},{id:Math.random()},{id:Math.random()}
+              ,{id:Math.random()});
+               changeData(myData);console.log(data.length)}}
           renderItem={(item) => (
             <CardComponent indexShowTab={indexShowTab} sale={{}} onCardClick={null}/>
            )
-  
+           
           }
+          
+         
           />
            
             
            
           </View>
-      </ScrollView>
+      </View>
     </View>
   );
 }

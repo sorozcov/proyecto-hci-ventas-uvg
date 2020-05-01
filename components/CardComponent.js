@@ -1,6 +1,6 @@
 import  React,{useState} from 'react';
 import { Card,Paragraph,IconButton,Button} from 'react-native-paper';
-import { StyleSheet, View,Text } from 'react-native';
+import { StyleSheet, View,Text,Linking } from 'react-native';
 import Modal from 'react-native-modal';
 import { change } from 'redux-form';
 
