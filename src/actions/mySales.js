@@ -1,20 +1,20 @@
 import * as types from '../types/mySales';
 
-export const addSale = sale => ({
+export const addMySale = sale => ({
   type: types.USER_SALE_ADDED,
   payload: sale,
 });
 
-export const changeSale = sale => ({
+export const changeMySale = sale => ({
   type: types.USER_SALE_CHANGED,
   payload: sale,
 });
 
-export const deleteSale = saleid => ({
+export const deleteMySale = saleid => ({
   type: types.USER_SALE_DELETED,
   payload: saleid,
 });
 
-export const clearSales = () => ({
+export const clearMySales = () => ({
   type: types.USER_SALES_CLEAR,
 });

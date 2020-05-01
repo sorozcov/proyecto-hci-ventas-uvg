@@ -176,7 +176,7 @@ export default connect(
   }),
   dispatch => ({
     async saveSale(navigation, sale) {
-      dispatch(actionsMySales.addSale(sale));
+      dispatch(actionsMySales.addMySale(sale));
       navigation.navigate('SalesScreen');
     },
   }),

@@ -250,8 +250,9 @@ export default connect(
       const userLoggedIn = await firebase.firestore().collection('users').doc(user.uid).get();
       dispatch(actionsLoggedUser.login(userLoggedIn.data()));
       //Se cargan las ventas del usuario en sesión
+      dispatch(actionsMySales.clearMySales());
       const userSales = await firebase.firestore().collection('sales').where('user.uid','==',user.uid).get();
-      userSales.docs.map(sale => dispatch(actionsMySales.addSale(sale.data())));
+      userSales.docs.map(sale => dispatch(actionsMySales.addMySale(sale.data())));
       navigation.navigate('Home');
     },
   }),
