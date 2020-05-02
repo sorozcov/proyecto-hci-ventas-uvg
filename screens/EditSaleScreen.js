@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, View,KeyboardAvoidingView, Alert, Keyboard, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import { TextInput, withTheme, Text, Button, Modal } from 'react-native-paper';
+import { withTheme, Text, Button, Modal, IconButton } from 'react-native-paper';
+import { Tooltip } from 'react-native-elements';
 import { reduxForm, Field } from 'redux-form';
 import { ScrollView } from 'react-native-gesture-handler';
 import ImagePicker,* as imageUploadFunctions from '../components/ImagePickerProduct';
@@ -14,17 +15,27 @@ import MyTextInput from '../components/textInput';
 import PickerInput from '../components/PickerInput';
 
 
-function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categories, saveSale, loggedUser }) {
+function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categories, saveSale, loggedUser, initialValues }) {
   const { colors, roundness } = theme;
   const [modalVisibleIndicatorSale, setmodalVisibleIndicatorSale] = useState(false);
+  const tooltipRef = useRef(null);
+  const isNew = initialValues==null;
+  console.log(initialValues);
   async function createSaleCollectionFirebase(values){
     Keyboard.dismiss();
     setmodalVisibleIndicatorSale(true);
     //Se guarda la imagen
     try {
 
-      let newSaleDoc = firebase.firestore().collection('sales').doc();
-      let uid = newSaleDoc.id;
+      var newSaleDoc = null;
+      var uid = "";
+      if(isNew){
+        newSaleDoc = firebase.firestore().collection('sales').doc();
+        uid = newSaleDoc.id;
+      } else {
+        newSaleDoc = firebase.firestore().collection('sales').doc(initialValues.saleid);
+        uid = newSaleDoc.id;
+      }
 
       values.image = values.image!==undefined ? values.image : null;
       if(values.image!==null){
@@ -33,6 +44,10 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
       
         values.image = uid;
       }
+      var selectedCategories = [];
+      values.category.map(categorySelectedId => {
+        selectedCategories.push(categories.filter(category => category.categoryid === categorySelectedId)[0]);
+      })
 
       var newSaleInfo = {
         saleid: uid, 
@@ -40,7 +55,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
         description: values.description,
         price: values.price,
         state: values.state[0],
-        category: values.category,
+        category: selectedCategories,
         image: values.image,
         user: loggedUser,
         isSold: false,
@@ -49,7 +64,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
 
       newSaleDoc.set(newSaleInfo);
       setmodalVisibleIndicatorSale(false);
-      saveSale(navigation, newSaleInfo);
+      saveSale(navigation, newSaleInfo, isNew);
 
     } catch (error) {
       console.log(error.toString());
@@ -77,8 +92,22 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
         <Field name={'name'} component={MyTextInput} label='Nombre' placeholder='Ingresa el nombre del producto'/>
         <Field name={'description'} component={MyTextInput} label='Descripción' placeholder='Ingresa una descripción'/>
         <Field name={'price'} component={MyTextInput} label='Precio' placeholder='Ingresa el precio que tendrá el producto' keyboardType='numeric'/>
-        <Field name={'state'} component={PickerInput} title='Estado' single={true} selectedText="Estado" placeholderText="Seleccionar estado" options={[{ label:'Nuevo', value:"1" }, { label:'Usado', value:"2" }]} selectedItems={[]}/>
-        <Field name={'category'} component={PickerInput} title='Categoría' single={false} selectedText="Categoría" placeholderText="Seleccionar categoría" options={categories.map(category => ({ label:category.name, value:category.categoryid }))} selectedItems={[]}/>
+        <Field name={'state'} component={PickerInput} title='Estado' single={true} selectedText="Estado" placeholderText="Seleccionar estado" options={[{ label:'Nuevo', value:"1" }, { label:'Usado', value:"2" }]} 
+          selectedItems={!isNew?[initialValues.state]:[]}/>
+        <View style={styles.containerTooltip}>
+          <View style={styles.tooltipStyle}>
+            <Tooltip ref={tooltipRef} height={100} popover={<Text style={{color:'white'}}>Las categorías serán usadas para filtrar las busquedas en la aplicación.</Text>} backgroundColor={"#03A9F4"}/>
+            <IconButton
+              icon="information"
+              color={"white"}
+              style={{backgroundColor:"#03A9F4",flex:0}}
+              size={18}
+              onPress={() => tooltipRef.current.toggleTooltip()}
+              />
+          </View>
+          <Field name={'category'} component={PickerInput} title='Categoría' single={false} selectedText="Categoría" placeholderText="Seleccionar categoría" options={categories.map(category => ({ label:category.name, value:category.categoryid }))} 
+            selectedItems={!isNew?initialValues.category.map(category => (category.categoryid)):[]}/>
+        </View>
         <Button
           disabled={!(dirty && valid)}
           theme={roundness}
@@ -94,13 +123,13 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
             fontFamily: 'dosis',
             marginLeft: '5%',
             marginRight: '5%',
-            marginTop:'4%',
             justifyContent: 'center',            
             
           }}
           onPress={handleSubmit(createSaleCollectionFirebase)}>
-          CREAR
+          {isNew ? 'CREAR' : 'EDITAR'}
         </Button>
+        <Text style={styles.textStyle} >{'En esta aplicación solo esta permitido subir artículos para su uso en la Universidad del Valle de Guatemala.'}</Text>
         <Modal
             transparent={true}
             animationType={'none'}
@@ -128,26 +157,20 @@ const styles = StyleSheet.create({
     paddingTop: '5%',
     paddingBottom: '5%',
   },
-  inputContainerStyle: {
-    margin: 8,
-  },
-  inputContainerStyle: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingBottom: 10,
-  },
-  titleStyle:{
-    textAlign: 'center', 
-    fontFamily: 'dosis-extra-bold',
-    fontSize:25,
-    paddingBottom: '10%',
-  },
   textStyle:{
     textAlign: 'center', 
-    fontFamily: 'dosis-semi-bold',
-    paddingTop: '4%',
-    paddingBottom: '4%',
+    fontFamily: 'dosis-light',
+    padding: '4%',
     fontSize:16
+  },
+  containerTooltip: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  tooltipStyle: {
+    width:30,
+    paddingLeft:8,
+    paddingTop:25,
   },
   modalBackground: {
     flex: 1,
@@ -173,15 +196,20 @@ export default connect(
   state => ({
     categories: selectors.getCategories(state),
     loggedUser: selectors.getLoggedUser(state),
+    initialValues: selectors.getMySaleSelected(state),
   }),
   dispatch => ({
-    async saveSale(navigation, sale) {
-      dispatch(actionsMySales.addMySale(sale));
+    async saveSale(navigation, sale, isNew) {
+      if(isNew)
+        dispatch(actionsMySales.addMySale(sale));
+      if(!isNew)
+        dispatch(actionsMySales.changeMySale(sale));
       navigation.navigate('SalesScreen');
     },
   }),
 )(reduxForm({ 
   form: 'signUp',
+  enableReinitialize : true,
   validate: (values) => {
     const errors = {};
     errors.image = !values.image

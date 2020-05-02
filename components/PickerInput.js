@@ -12,7 +12,6 @@ export default class MultiSelectExample extends Component {
   
   onSelectedItemsChange = selectedItems => {
     this.setState({ selectedItems });
-    this.input.value = selectedItems;
   };
   
 
@@ -22,10 +21,13 @@ export default class MultiSelectExample extends Component {
     this.input = props.input;
     this.meta = props.meta;
     this.inputProps = props;
+    this.state.selectedItems = this.input.value;
   }
   
   render() {
     this.props.input.onChange(this.state.selectedItems);
+    console.log(this.input.value)
+    console.log(this.state.selectedItems)
    return(
    <KeyboardAvoidingView style={{ flex: 1 }}>
     <View style={{ flex: 1 }}>

@@ -16,6 +16,7 @@ export const getMySale = (state, saleid) => mySalesSelectors.getMySale(state.myS
 export const getAllMySales = state => mySalesSelectors.getAllMySales(state.mySales);
 export const getMySales = state => mySalesSelectors.getMySales(state.mySales);
 export const getMySoldSales = state => mySalesSelectors.getMySoldSales(state.mySales);
+export const getMySaleSelected = (state) => mySalesSelectors.getMySaleSelected(state.mySales);
 //Selectors de savedSales
 export const getSavedSale = (state, saleid) => savedSalesSelectors.getSavedSale(state.savedSales, saleid);
 export const getSavedSales = state => savedSalesSelectors.getSavedSales(state.savedSales);

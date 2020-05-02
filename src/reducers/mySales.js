@@ -53,9 +53,25 @@ const byId = (state = {}, action) => {
   }
 };
 
+const mySaleSelected = (state = null, action) => {
+  switch (action.type) {
+    case types.USER_SALE_SELECTED: {
+      return action.payload;
+    }
+    case types.USER_SALE_DESELECTED: {
+      var newState = null;
+      return newState;
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
 const mySales = combineReducers({
   byId,
   order,
+  mySaleSelected,
 });
 
 export default mySales;
@@ -71,3 +87,4 @@ export const getMySales = state => state.order.filter(sale => !sale.isSold).map(
 export const getMySoldSales = state => state.order.filter(sale => sale.isSold).map(
   id => getMySale(state, id),
 ).filter(sale => sale != null);
+export const getMySaleSelected = (state) => state.mySaleSelected;

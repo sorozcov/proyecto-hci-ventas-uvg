@@ -5,13 +5,13 @@ import { withTheme, Text, Button,Card,FAB,Paragraph } from 'react-native-paper';
 import CardComponent from '../components/CardComponent';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as firebase from "firebase";
-
-import * as selectors from '../src/reducers';
 import { useScrollToTop } from '@react-navigation/native';
 
-function SalesScreen({ theme, navigation, mySales }) {
+import * as selectors from '../src/reducers';
+import * as actionsMySales from '../src/actions/mySales';
+
+function SalesScreen({ theme, navigation, mySales, selectSale, newSale }) {
   const { colors, roundness } = theme;
-  console.log(mySales);
   const refFlatList = React.useRef(null);
  
   useScrollToTop(refFlatList);
@@ -35,7 +35,7 @@ function SalesScreen({ theme, navigation, mySales }) {
           marginTop:15             
           
         }}
-        onPress={() => navigation.navigate('EditSaleScreen')}>
+        onPress={() => newSale(navigation)}>
         NUEVA VENTA
       </Button>
       <View 
@@ -50,7 +50,7 @@ function SalesScreen({ theme, navigation, mySales }) {
           keyExtractor={(saleItem, index) => saleItem.saleid}
           onEndReachedThreshold={0.1}
           renderItem={(saleItem) => (
-            <CardComponent indexShowTab={1} sale={saleItem} onCardClick={null} isMySale={true}/>
+            <CardComponent indexShowTab={1} sale={saleItem} onCardClick={() => selectSale(navigation,saleItem.item)} isMySale={true}/>
             )
             
           }
@@ -92,5 +92,14 @@ export default connect(
   state => ({
     mySales: selectors.getMySales(state),
   }),
-  undefined,
+  dispatch => ({
+    selectSale(navigation, sale) {
+      dispatch(actionsMySales.selectMySale(sale));
+      navigation.navigate('EditSaleScreen');
+    },
+    newSale(navigation) {
+      dispatch(actionsMySales.deselectMySale());
+      navigation.navigate('EditSaleScreen');
+    },
+  }),
 )(withTheme(SalesScreen));

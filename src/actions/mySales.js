@@ -15,6 +15,15 @@ export const deleteMySale = saleid => ({
   payload: saleid,
 });
 
+export const selectMySale = sale => ({
+  type: types.USER_SALE_SELECTED,
+  payload: sale,
+});
+
+export const deselectMySale = () => ({
+  type: types.USER_SALE_DESELECTED,
+});
+
 export const clearMySales = () => ({
   type: types.USER_SALES_CLEAR,
 });

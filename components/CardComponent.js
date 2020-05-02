@@ -8,7 +8,6 @@ export default function CardSale(props) {
   const {indexShowTab,isMySale} = props;
   let {onCardClick} = props;
   const sale = props.sale.item;
-  console.log(sale);
   const [showModalInformation, changeShowModalInformation] = useState(false);
   if(onCardClick==null || onCardClick==undefined){
       onCardClick = function(){
