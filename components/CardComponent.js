@@ -1,13 +1,14 @@
 import  React,{useState} from 'react';
 import { Card,Paragraph,IconButton,Button} from 'react-native-paper';
-import { StyleSheet, View,Text,Linking } from 'react-native';
+import { StyleSheet, View,Text,Linking,Alert } from 'react-native';
 import Modal from 'react-native-modal';
 import { change } from 'redux-form';
 
 export default function CardSale(props) {
-  const {indexShowTab,sale} = props;
+  const {indexShowTab,isMySale} = props;
   let {onCardClick} = props;
-  const {productName,description,price,phoneNumber,name} = sale;
+  const sale = props.sale.item;
+  console.log(sale);
   const [showModalInformation, changeShowModalInformation] = useState(false);
   if(onCardClick==null || onCardClick==undefined){
       onCardClick = function(){
@@ -19,10 +20,10 @@ export default function CardSale(props) {
         <Card onPress={()=> onCardClick()} style={{ margin: '1.1%',flex:0.5,backgroundColor:'white',elevation:10  }}>
         <Card.Title
             
-            title={"Nombre Producto"}
+            title={sale.name}
             titleStyle={{fontFamily:"dosis-bold",color:'black',fontSize:indexShowTab==0 ? 21 : 16.5}}
-            subtitle="Descripción"
-            subtitleStyle={{fontFamily:'dosis-semi-bold',color:'black',fontSize:indexShowTab==0 ? 14 : 12}}
+            // subtitle={sale.description}
+            // subtitleStyle={{fontFamily:'dosis-semi-bold',color:'black',fontSize:indexShowTab==0 ? 14 : 12}}
             
         >
             
@@ -31,22 +32,32 @@ export default function CardSale(props) {
         <Card.Cover style={{resizeMode: 'contain'}}source={{ uri: 'https://i.ytimg.com/vi/8Qqo6EWH5cI/hqdefault.jpg' }} />
         <Card.Content >
             <View style={{flex:1,flexDirection:'row'}}>
-            <Paragraph style={{fontFamily:"dosis-bold",flex:0.7,color:'black',fontSize:indexShowTab==0 ? 18 : 15,marginTop:10,marginBottom:20,paddingRight:10}}>GTQ PRECIO</Paragraph>
+            <Paragraph style={{fontFamily:"dosis-bold",flex:0.7,color:'black',fontSize:indexShowTab==0 ? 18 : 15,marginTop:10,marginBottom:20,paddingRight:10}}>Q {sale.price}</Paragraph>
         
-            <IconButton
+            { !isMySale &&
+             <IconButton
             icon="whatsapp"
             color={"white"}
             style={{backgroundColor:"green",flex:0.35}}
             size={(indexShowTab==0 ? 25 : 17)}
             onPress={() => {
-                let url = 'whatsapp://send?text=' + "Hola, vi tu producto en UVGet y estoy interesado." + '&phone=502' + "58508720";
+                let url = 'whatsapp://send?text=' + `Hola ${sale.user.name}, vi tu producto ${sale.name} en UVGet y estoy interesado.` + '&phone=502' + `${sale.user.phoneNumber}`;
                 Linking.openURL(url).then((data) => {
                 console.log('WhatsApp Opened');
                 }).catch(() => {
-                alert('Whatsapp no está instalado en su teléfono.');
+                  Alert.alert(
+                    "Whatsapp Error",
+                    "Whatsapp no está instalado en su dispositivo.",
+                    [
+                      {text: 'Ok', onPress: () => {}},
+                    ],
+                   )
                 });
-            }}
-            />
+            }
+          }
+            /> 
+          }
+          { !isMySale &&
             <IconButton
             icon="bookmark"
             color={"white"}
@@ -54,6 +65,7 @@ export default function CardSale(props) {
             size={(indexShowTab==0 ? 25 : 17)}
             onPress={() => console.log('Pressed')}
             />
+          }
             </View>
             
             

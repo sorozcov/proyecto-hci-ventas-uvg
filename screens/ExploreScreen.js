@@ -26,7 +26,7 @@ const RightContent = props => <FAB {...props} small style={{marginRight:10,backg
 function ExploreScreen({ theme, navigation, onClick }) {
   const { colors, roundness } = theme;
   const [indexShowTab, changeIndexShowTab] = useState(1);
-  const [data, changeData] = useState([{id:1},{id:2},{id:3},{id:4}]);
+  const [data, changeData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const refFlatList = React.useRef(null);
@@ -98,7 +98,7 @@ function ExploreScreen({ theme, navigation, onClick }) {
           }
           }
           renderItem={(item) => (
-            <CardComponent indexShowTab={indexShowTab} sale={{}} onCardClick={null}/>
+            <CardComponent indexShowTab={indexShowTab} sale={{}} onCardClick={null} isMySale={false}/>
            )
            
           }
