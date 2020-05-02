@@ -2,14 +2,16 @@ import React from 'react';
 import { Image, StyleSheet, View ,FlatList} from 'react-native';
 import { connect } from 'react-redux';
 import { withTheme, Text, Button,Card,FAB,Paragraph } from 'react-native-paper';
+
 import { ScrollView } from 'react-native-gesture-handler';
-
 import * as firebase from "firebase";
-import * as actionsCategories from '../src/actions/categories';
+
+import * as selectors from '../src/reducers';
 
 
-function SalesScreen({ theme, navigation, onClick }) {
+function SalesScreen({ theme, navigation, mySales }) {
   const { colors, roundness } = theme;
+  console.log(mySales);
   return (
     <View style={styles.container}>
       <Button
@@ -55,4 +57,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withTheme(SalesScreen);
+export default connect(
+  state => ({
+    mySales: selectors.getMySales(state),
+  }),
+  undefined,
+)(withTheme(SalesScreen));

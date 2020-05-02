@@ -1,9 +1,7 @@
 import React , { useRef,Component } from 'react';
 import { StyleSheet, View,KeyboardAvoidingView,Text} from 'react-native';
 
-import MultiSelect from 'react-native-multiple-select';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
-import { Font } from 'expo';
 
 export default class MultiSelectExample extends Component {
   
@@ -14,7 +12,9 @@ export default class MultiSelectExample extends Component {
   
   onSelectedItemsChange = selectedItems => {
     this.setState({ selectedItems });
+    this.input.value = selectedItems;
   };
+  
 
   constructor(props){
     super(props)
@@ -25,7 +25,7 @@ export default class MultiSelectExample extends Component {
   }
   
   render() {
-  this.props.input.onChange(this.state.selectedItems);
+    this.props.input.onChange(this.state.selectedItems);
    return(
    <KeyboardAvoidingView style={{ flex: 1 }}>
     <View style={{ flex: 1 }}>
@@ -73,7 +73,7 @@ export default class MultiSelectExample extends Component {
       />
       
       </View>
-      
+      {this.meta.touched && (this.meta.error && <Text style={styles.textError}>{this.meta.error}</Text>)}
     </View>
     </KeyboardAvoidingView>
   
@@ -94,15 +94,14 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 15,
-  },
+  }, 
   pickerContainer: {
     borderWidth: 1,
     borderColor: 'gray',
-   
-    
     borderRadius: 10,
     backgroundColor: '#f5f5f5',
-  }, pickerContainer2: {
+  }, 
+  pickerContainer2: {
     borderWidth: 1,
     marginRight:10,
     marginLeft:10,
@@ -114,25 +113,25 @@ const styles = StyleSheet.create({
     marginBottom:10,
     backgroundColor: '#f5f5f5',
     borderColor: 'gray',
-  }, listContainer: {
+  }, 
+  listContainer: {
     borderWidth: 1,
     marginRight:10,
     marginLeft:10,
-   
-    
     borderRadius: 10,
-    
     backgroundColor: '#f5f5f5',
     borderColor: 'gray',
-  }
-  , pickerContainer2inside: {
-    
-    
-    
+  }, 
+  pickerContainer2inside: {
     borderRadius: 10,
     paddingRight:10,
     paddingLeft:10,
-
     backgroundColor: '#f5f5f5',
+  },
+  textError: {
+    color: 'red',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop:5
   },
 });

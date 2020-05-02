@@ -6,6 +6,7 @@ import * as firebase from "firebase";
 
 import * as actionsLoggedUser from '../src/actions/loggedUser';
 import * as actionsCategories from '../src/actions/categories';
+import * as actionsMySales from '../src/actions/mySales';
 
 
 function LoginScreen({ theme, navigation, saveLoggedUser }) {
@@ -251,6 +252,10 @@ export default connect(
       //Se cargan los usuarios
       const userLoggedIn = await firebase.firestore().collection('users').doc(user.uid).get();
       dispatch(actionsLoggedUser.login(userLoggedIn.data()));
+      //Se cargan las ventas del usuario en sesión
+      dispatch(actionsMySales.clearMySales());
+      const userSales = await firebase.firestore().collection('sales').where('user.uid','==',user.uid).get();
+      userSales.docs.map(sale => dispatch(actionsMySales.addMySale(sale.data())));
       navigation.navigate('Home');
     },
   }),
