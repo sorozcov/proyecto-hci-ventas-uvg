@@ -9,6 +9,7 @@ import * as actionsCategories from '../src/actions/categories';
 import { MaterialCommunityIcons } from 'react-native-vector-icons/MaterialCommunityIcons';
 import CardComponent from '../components/CardComponent';
 import { Random } from 'expo';
+import { useScrollToTop } from '@react-navigation/native';
 
 const renderValueWithImage = function(text, imageUri) {
   return (
@@ -26,7 +27,11 @@ function ExploreScreen({ theme, navigation, onClick }) {
   const { colors, roundness } = theme;
   const [indexShowTab, changeIndexShowTab] = useState(1);
   const [data, changeData] = useState([{id:1},{id:2},{id:3},{id:4}]);
-
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const refFlatList = React.useRef(null);
+ 
+  useScrollToTop(refFlatList);
   return (
     <View style={styles.container}>
       <Button
@@ -70,23 +75,35 @@ function ExploreScreen({ theme, navigation, onClick }) {
       <View style={{...styles.contentContainer, flexDirection: 'column',justifyContent:"space-evenly",flex:1}} >
       <FlatList style={{margin:0}}
           data={data}
+          ref={refFlatList}
           key={indexShowTab+1} 
           numColumns={indexShowTab+1}
           keyExtractor={(item, index) => item.id }
           onEndReachedThreshold={0.1}
+          refreshing={refreshing}
+          onRefresh={()=>{setRefreshing(true);setTimeout(function(){setRefreshing(false);},1000)}}
           onEndReached={()=>
             {
-              let myData = [...data]; 
-              myData.push({id:Math.random()},{id:Math.random()},{id:Math.random()}
-              ,{id:Math.random()});
-               changeData(myData);console.log(data.length)}}
+              if(loading){
+                return;
+              }
+                setLoading(true);
+                setTimeout(function(){
+                let myData = [...data]; 
+                myData.push({id:Math.random()},{id:Math.random()},{id:Math.random()}
+                ,{id:Math.random()});
+                changeData(myData);console.log(data.length);
+                setLoading(false)}
+                ,1000);
+          }
+          }
           renderItem={(item) => (
             <CardComponent indexShowTab={indexShowTab} sale={{}} onCardClick={null}/>
            )
            
           }
           
-         
+            
           />
            
             
