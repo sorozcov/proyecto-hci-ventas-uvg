@@ -1,8 +1,9 @@
 import  React,{useState} from 'react';
-import { Card,Paragraph,IconButton,Button} from 'react-native-paper';
+import { Card,Paragraph,IconButton,Button,Avatar} from 'react-native-paper';
 import { StyleSheet, View,Text,Linking,Alert } from 'react-native';
 import Modal from 'react-native-modal';
 import { change } from 'redux-form';
+import Image from 'react-native-image-progress';
 
 export default function CardSale(props) {
   const {indexShowTab,isMySale} = props;
@@ -18,20 +19,20 @@ export default function CardSale(props) {
         <View style={{flex:1}}> 
         <Card onPress={()=> onCardClick()} style={{ margin: '1.1%',flex:0.5,backgroundColor:'white',elevation:10  }}>
         <Card.Title
-            
+             //left={(props) => <Avatar.Icon {...props} icon="folder" size={30}/>}
             title={sale.name}
             titleStyle={{fontFamily:"dosis-bold",color:'black',fontSize:indexShowTab==0 ? 21 : 16.5}}
             // subtitle={sale.description}
             // subtitleStyle={{fontFamily:'dosis-semi-bold',color:'black',fontSize:indexShowTab==0 ? 14 : 12}}
-            
+           
         >
             
         </Card.Title>
         
-        <Card.Cover style={{resizeMode: 'contain'}}source={{ uri: 'https://i.ytimg.com/vi/8Qqo6EWH5cI/hqdefault.jpg' }} />
+        <Image resizeMode="stretch" source={{ uri: sale.image}} style={{height: 200}} />
         <Card.Content >
             <View style={{flex:1,flexDirection:'row'}}>
-            <Paragraph style={{fontFamily:"dosis-bold",flex:0.7,color:'black',fontSize:indexShowTab==0 ? 18 : 15,marginTop:10,marginBottom:20,paddingRight:10}}>Q {sale.price}</Paragraph>
+            <Paragraph style={{fontFamily:"dosis-bold",flex:0.7,color:'black',fontSize:indexShowTab==0 ? 18 : 15,marginTop:10,marginBottom:20,paddingRight:10}}>Q {sale.price} </Paragraph>
         
             { !isMySale &&
              <IconButton

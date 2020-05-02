@@ -19,7 +19,9 @@ export const uriToBlob = (uri) => {
     
     xhr.onerror = function() {
       // something went wrong
+      console.log("error");
       reject(new Error('uriToBlob failed'));
+      
     };
     // this helps us get a blob
     xhr.responseType = 'blob';
@@ -30,7 +32,7 @@ export const uriToBlob = (uri) => {
 }
 
 
-export const uploadToFirebase = (blob,uid) => {
+export const uploadToFirebase2 = (blob,uid) => {
   return new Promise((resolve, reject)=>{
     let storageRef = firebase.storage().ref();
     let img = "ProductImages/" + uid+'.jpg';
@@ -39,12 +41,28 @@ export const uploadToFirebase = (blob,uid) => {
     }).then((snapshot)=>{
       blob.close();
       resolve(snapshot);
+      console.log(snapshot);
+      snapshot.ref.getDownloadURL().then( 
+        (downloadURL) =>{
+          
+          resolve(downloadURL);
+       })
     }).catch((error)=>{
       reject(error);
     });
   });
 }
 
+export const uploadToFirebase = async (blob,uid) => {
+  let storageRef = await firebase.storage().ref();
+  let img = "ProductImages/" + uid+'.jpg';
+  let snapshot = await storageRef.child(img).put(blob, {
+    contentType: 'image/jpeg'
+  });
+  let imageUrl = await snapshot.ref.getDownloadURL();
+  console.log("up" + String(imageUrl))
+  return imageUrl;
+}
  
 
 export default class ImagePickerUser extends React.Component {

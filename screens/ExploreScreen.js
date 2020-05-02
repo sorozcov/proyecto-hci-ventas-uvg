@@ -6,57 +6,81 @@ import { ScrollView } from 'react-native-gesture-handler';
 import SegmentedControlTab from "react-native-segmented-control-tab";
 import * as firebase from "firebase";
 import * as actionsCategories from '../src/actions/categories';
-import { MaterialCommunityIcons } from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CardComponent from '../components/CardComponent';
 import { Random } from 'expo';
 import { useScrollToTop } from '@react-navigation/native';
-
-const renderValueWithImage = function(text, imageUri) {
-  return (
-    <Text> 
-      <MaterialCommunityIcons name="cart" color={'black'} size={25}
-                    style={{ marginTop: 0,paddingBottom:8 }} />
-      {text}
-    </Text>
-    )
-}
+import * as actionsApplicationSales from '../src/actions/applicationSales';
+import * as selectors from '../src/reducers';
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import FilterInput from '../components/FilterInput';
 
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />;
 const RightContent = props => <FAB {...props} small style={{marginRight:10,backgroundColor:"white",color:'black'}} icon="whatsapp"onPress={() => console.log('Pressed')}/>;
-function ExploreScreen({ theme, navigation, onClick }) {
+function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,lastFetched,categories }) {
   const { colors, roundness } = theme;
   const [indexShowTab, changeIndexShowTab] = useState(1);
   const [data, changeData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [categoriesSearch, setCategoriesSearch] = useState([]);
   const [loading, setLoading] = useState(false);
   const refFlatList = React.useRef(null);
- 
+  const onRefresh = async ()=>{
+    if(!refreshing){
+      setRefreshing(true);
+      if(categoriesSearch.length==0){
+
+        const newApplicationSales = await firebase.firestore().collection('sales').limit(20).get();
+        let appSales= [];
+        newApplicationSales.docs.forEach(sale => {
+          appSales.push(sale.data());
+        })
+        refresh(appSales);
+        console.log("refresh without filters");
+      }else{
+        let newApplicationSales = await firebase.firestore().collection('sales').where("categories", "array-contains", categoriesSearch[i]).get();
+        for (let i = 1; i < categoriesSearch.length; i++) {
+          const moreSales = await firebase.firestore().collection('sales').where("categories", "array-contains", categoriesSearch[i]).get();
+          newApplicationSales.concat(moreSales);
+        }
+        let appSales= [];
+        newApplicationSales.docs.forEach(sale => {
+          appSales.push(sale.data());
+        });
+
+        refresh(appSales);
+        console.log("refresh with filters");
+      }
+      setRefreshing(false);
+
+      
+    }
+  };
+  const onLoadMore = async ()=>{
+    if(!loading && applicationSales.length>19){
+      if(categoriesSearch.length==0){
+        setLoading(true);
+        console.log(lastFetched);
+        const moreApplicationSales = await firebase.firestore().collection('sales').orderBy('name').startAfter(lastFetched).limit(20).get();
+        let appSales= [];
+        moreApplicationSales.docs.forEach(sale => {
+          appSales.push(sale.data());
+        })
+        loadMore(appSales);
+        setLoading(false);
+        console.log("new load");
+      }
+    }
+  };
   useScrollToTop(refFlatList);
+  console.log(categoriesSearch);
   return (
     <View style={styles.container}>
-      <Button
-        theme={roundness}
-        color={'#000000'}
-        icon="plus"
-        height={50}
-        mode="contained"
-        labelStyle={{
-          fontFamily:"dosis-bold",
-          fontSize: 15,
-        }}
-        style={{
-          fontFamily: 'dosis',
-          marginLeft: '5%',
-          marginRight: '5%',
-          justifyContent: 'center',   
-          marginTop:5,
-          marginBottom:0      
-          
-        }}
-        onPress={() => navigation.navigate('EditSaleScreen')}>
-        NUEVA VENTA
-      </Button>
-      <SegmentedControlTab
+    <View style={{flex:0.12,marginBottom:(categoriesSearch.length>0 ?'12%':'2%')}}>
+     <FilterInput title='Categorías' single={false} selectedText="Buscar por categorías..." placeholderText="Buscar por categorías..." options={categories.map(category => ({ label:category.name, value:category.categoryid }))} 
+            selectedItems={categoriesSearch} onSelectedItemsChange={(selectedItems)=>{setCategoriesSearch(selectedItems);onRefresh();}}/>
+    </View>
+      {/* <SegmentedControlTab
           values={[ "1 por Columna" , "2 por Columna"]}
           activeTabStyle={{backgroundColor:colors.primary}}
           tabsContainerStyle={{paddingTop:8,marginRight:"10%",marginLeft:"10%"}}
@@ -66,39 +90,40 @@ function ExploreScreen({ theme, navigation, onClick }) {
           badges={["1","2"]}
           onTabPress={changeIndexShowTab}
           tabBadgeContainerStyle={{backgroundColor:'black'}}
-        />
+        /> */}
+      
+    
+  
+        
+
       
      
-      <View 
+     <View 
 
        style={styles.containerScrollView} >
       <View style={{...styles.contentContainer, flexDirection: 'column',justifyContent:"space-evenly",flex:1}} >
+      { applicationSales.length==0 &&
+        <View style={{flex:0.1}}>
+        <MaterialCommunityIcons name="cart-remove" color={'black'} size={80}
+                   style={{textAlign:'center'}} />
+        <Text style={styles.textStyle} >
+          Lo sentimos. No hay ninguna venta para mostrar. </Text>
+        }
+        </View>
+        }
       <FlatList style={{margin:0}}
-          data={data}
+          data={applicationSales}
           ref={refFlatList}
-          key={indexShowTab+1} 
-          numColumns={indexShowTab+1}
-          keyExtractor={(item, index) => item.id }
+          key={"FlatListAppSales"} 
+          numColumns={2}
+          keyExtractor={(saleItem, index) => saleItem.saleId }
           onEndReachedThreshold={0.1}
           refreshing={refreshing}
-          onRefresh={()=>{setRefreshing(true);setTimeout(function(){setRefreshing(false);},1000)}}
-          onEndReached={()=>
-            {
-              if(loading){
-                return;
-              }
-                setLoading(true);
-                setTimeout(function(){
-                let myData = [...data]; 
-                myData.push({id:Math.random()},{id:Math.random()},{id:Math.random()}
-                ,{id:Math.random()});
-                changeData(myData);console.log(data.length);
-                setLoading(false)}
-                ,1000);
-          }
-          }
-          renderItem={(item) => (
-            <CardComponent indexShowTab={indexShowTab} sale={{}} onCardClick={null} isMySale={false}/>
+          onRefresh={()=>{onRefresh()}}
+          onEndReached={()=> onLoadMore()}
+          renderItem={(saleItem) => (
+            
+            <CardComponent indexShowTab={1} sale={saleItem} onCardClick={null} isMySale={false}/>
            )
            
           }
@@ -110,6 +135,7 @@ function ExploreScreen({ theme, navigation, onClick }) {
            
           </View>
       </View>
+    
     </View>
   );
 }
@@ -134,6 +160,27 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 0
   },
+  
+  textStyle:{
+    textAlign: 'center', 
+    fontFamily: 'dosis-light',
+    padding: '2%',
+    fontSize:20
+  },
 });
 
-export default withTheme(ExploreScreen);
+export default connect(
+  state => ({
+    applicationSales: selectors.getAllSales(state),
+    lastFetched: selectors.getLastFetched(state),
+    categories: selectors.getCategories(state),
+  }),
+  dispatch => ({
+    refresh(appSales) {
+      dispatch(actionsApplicationSales.fetchNewSales(appSales));
+    },
+    loadMore(appSales) {
+      dispatch(actionsApplicationSales.fetchMoreSales(appSales));
+    },
+  }),
+) (withTheme(ExploreScreen));

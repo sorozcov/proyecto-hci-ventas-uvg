@@ -7,6 +7,7 @@ import * as firebase from "firebase";
 import * as actionsLoggedUser from '../src/actions/loggedUser';
 import * as actionsCategories from '../src/actions/categories';
 import * as actionsMySales from '../src/actions/mySales';
+import * as actionsApplicationSales from '../src/actions/applicationSales';
 
 
 function LoginScreen({ theme, navigation, saveLoggedUser }) {
@@ -256,6 +257,13 @@ export default connect(
       dispatch(actionsMySales.clearMySales());
       const userSales = await firebase.firestore().collection('sales').where('user.uid','==',user.uid).get();
       userSales.docs.map(sale => dispatch(actionsMySales.addMySale(sale.data())));
+      //Se cargan las primeras 20 application sales
+      const applicationSales = await firebase.firestore().collection('sales').orderBy('name').limit(20).get();
+      let appSales= [];
+      applicationSales.docs.forEach(sale => {
+        appSales.push(sale.data());
+      })
+      dispatch(actionsApplicationSales.fetchNewSales(appSales));
       navigation.navigate('Home');
     },
   }),

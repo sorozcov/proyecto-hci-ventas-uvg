@@ -2,11 +2,12 @@ import { combineReducers } from 'redux';
 
 import mySales, * as mySalesSelectors from './mySales';
 import savedSales, * as savedSalesSelectors from './savedSales';
-
+import applicationSales,* as applicationSalesSelectors  from './applicationSales';
 
 const sales = combineReducers({
   mySales,
   savedSales,
+  applicationSales
 });
 
 export default sales;
@@ -20,3 +21,7 @@ export const getMySaleSelected = (state) => mySalesSelectors.getMySaleSelected(s
 //Selectors de savedSales
 export const getSavedSale = (state, saleid) => savedSalesSelectors.getSavedSale(state.savedSales, saleid);
 export const getSavedSales = state => savedSalesSelectors.getSavedSales(state.savedSales);
+
+export const getSale = (state, saleid) => applicationSalesSelectors.getSale(state.applicationSales, saleid);
+export const getAllSales = state => applicationSalesSelectors.getAllSales(state.applicationSales);
+export const getLastFetched = state => applicationSalesSelectors.getLastFetched(state.applicationSales);

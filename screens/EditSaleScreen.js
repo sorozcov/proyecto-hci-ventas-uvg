@@ -39,10 +39,11 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
 
       values.image = values.image!==undefined ? values.image : null;
       if(values.image!==null){
+        console.log("hola")
         let blob = await imageUploadFunctions.uriToBlob(values.image);
-        await imageUploadFunctions.uploadToFirebase(blob,uid);
-      
-        values.image = uid;
+        let imageUrl = await imageUploadFunctions.uploadToFirebase(blob,uid);
+          console.log(imageUrl);
+          values.image = imageUrl;
       }
       var selectedCategories = [];
       values.category.map(categorySelectedId => {
@@ -56,6 +57,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
         price: values.price,
         state: values.state[0],
         category: selectedCategories,
+        categories:values.category,
         image: values.image,
         user: loggedUser,
         isSold: false,
@@ -67,7 +69,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
       saveSale(navigation, newSaleInfo, isNew);
 
     } catch (error) {
-      console.log(error.toString());
+      console.log("ERROR" + error.toString());
       let errorMessage = "No se pudo guardar la venta"
       
       setmodalVisibleIndicatorSale(false);
@@ -89,14 +91,14 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
     <View style={{...styles.container}}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
         <Field name={'image'} component={ImagePicker} image={null}/>
-        <Field name={'name'} component={MyTextInput} label='Nombre' placeholder='Ingresa el nombre del producto'/>
-        <Field name={'description'} component={MyTextInput} label='Descripción' placeholder='Ingresa una descripción'/>
+        <Field name={'name'} component={MyTextInput} label='Título' placeholder='Ingresa el nombre del producto' maxLength={20} />
+        <Field name={'description'} component={MyTextInput} label='Descripción' placeholder='Ingresa una descripción' multiline={true}/>
         <Field name={'price'} component={MyTextInput} label='Precio' placeholder='Ingresa el precio que tendrá el producto' keyboardType='numeric'/>
         <Field name={'state'} component={PickerInput} title='Estado' single={true} selectedText="Estado" placeholderText="Seleccionar estado" options={[{ label:'Nuevo', value:"1" }, { label:'Usado', value:"2" }]} 
           selectedItems={!isNew?[initialValues.state]:[]}/>
         <View style={styles.containerTooltip}>
           <View style={styles.tooltipStyle}>
-            <Tooltip ref={tooltipRef} height={100} popover={<Text style={{color:'white'}}>Las categorías serán usadas para filtrar las busquedas en la aplicación.</Text>} backgroundColor={"#03A9F4"}/>
+            <Tooltip ref={tooltipRef} height={120} popover={<Text style={{color:'white'}}>Las categorías serán usadas para filtrar las busquedas en la aplicación.</Text>} backgroundColor={"#03A9F4"}/>
             <IconButton
               icon="information"
               color={"white"}
@@ -123,13 +125,14 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
             fontFamily: 'dosis',
             marginLeft: '5%',
             marginRight: '5%',
+            marginTop: '2%',
             justifyContent: 'center',            
             
           }}
           onPress={handleSubmit(createSaleCollectionFirebase)}>
           {isNew ? 'CREAR' : 'EDITAR'}
         </Button>
-        <Text style={styles.textStyle} >{'En esta aplicación solo esta permitido subir artículos para su uso en la Universidad del Valle de Guatemala.'}</Text>
+        <Text style={styles.textStyle} >{'En esta aplicación solo esta permitido la venta de artículos para su uso en la Universidad del Valle de Guatemala.'}</Text>
         <Modal
             transparent={true}
             animationType={'none'}

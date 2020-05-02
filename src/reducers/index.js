@@ -30,3 +30,7 @@ export const getMySoldSales = state => salesSelectors.getMySoldSales(state.sales
 export const getMySaleSelected = (state) => salesSelectors.getMySaleSelected(state.sales);
 export const getSavedSale = (state, saleid) => salesSelectors.getSavedSale(state.sales, saleid);
 export const getSavedSales = state => salesSelectors.getSavedSales(state.sales);
+
+export const getSale = (state, saleid) => salesSelectors.getSale(state.sales, saleid);
+export const getAllSales = state => salesSelectors.getAllSales(state.sales);
+export const getLastFetched = state => salesSelectors.getLastFetched(state.sales);

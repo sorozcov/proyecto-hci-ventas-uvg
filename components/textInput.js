@@ -21,7 +21,8 @@ export default function MyTextInput(props) {
         keyboardType={inputProps.keyboardType}
         secureTextEntry={inputProps.secureTextEntry}
         returnKeyType={"done"}
-        
+        multiline={inputProps.multiline}
+        maxLength={inputProps.maxLength}
         />
       {meta.touched && (meta.error && <Text style={styles.textError}>{meta.error}</Text>)}
     </View>

@@ -6,7 +6,7 @@ import CardComponent from '../components/CardComponent';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as firebase from "firebase";
 import { useScrollToTop } from '@react-navigation/native';
-
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as selectors from '../src/reducers';
 import * as actionsMySales from '../src/actions/mySales';
 
@@ -38,6 +38,18 @@ function SalesScreen({ theme, navigation, mySales, selectSale, newSale }) {
         onPress={() => newSale(navigation)}>
         NUEVA VENTA
       </Button>
+      { mySales.length==0 &&
+      <View 
+        style={styles.containerScrollView} >
+        <View style={{...styles.contentContainer, flexDirection: 'column',justifyContent:"center",flex:1}} >
+        <MaterialCommunityIcons name="shopify" color={'black'} size={80}
+                   style={{textAlign:'center'}} />
+        <Text style={styles.textStyle} >
+          Usted no ha creado ninguna venta. </Text>
+        </View>
+        </View>
+      
+      }
       <View 
 
         style={styles.containerScrollView} >
@@ -85,6 +97,12 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 0
+  },
+  textStyle:{
+    textAlign: 'center', 
+    fontFamily: 'dosis-light',
+    padding: '2%',
+    fontSize:20
   },
 });
 

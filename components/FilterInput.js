@@ -1,45 +1,37 @@
 import React , { useRef,Component } from 'react';
 import { StyleSheet, View,KeyboardAvoidingView,Text} from 'react-native';
 
-
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 
 export default class MultiSelectExample extends Component {
   
-  state = {
-    selectedItems : [],
-  };
-
-  
-  onSelectedItemsChange = selectedItems => {
-    this.setState({ selectedItems });
-  };
+ 
   
 
   constructor(props){
     super(props)
-    props.input.value = props.selectedItems;
     this.input = props.input;
-    this.meta = props.meta;
     this.inputProps = props;
-    this.state.selectedItems = this.input.value;
+    
+    
   }
   
   render() {
-    this.props.input.onChange(this.state.selectedItems);
+   this.inputProps = this.props;
    return(
    <KeyboardAvoidingView style={{ flex: 1 }}>
     <View style={{ flex: 1 }}>
       <View style={styles.inputContainerStyle}>
      
       <SectionedMultiSelect
-       
+        
         flatListProps={{nestedScrollEnabled: true}}
         hideTags={this.inputProps.single}
         items={this.inputProps.options}
         uniqueKey="value"
         ref={(component) => { this.multiSelect = component }}
-        onSelectedItemsChange={this.onSelectedItemsChange}
-        selectedItems={this.state.selectedItems}
+        onSelectedItemsChange={this.inputProps.onSelectedItemsChange}
+        selectedItems={this.inputProps.selectedItems}
         selectText={this.inputProps.selectedText}
         searchInputPlaceholderText={this.inputProps.placeholderText}
         fontSize={16}
@@ -68,7 +60,6 @@ export default class MultiSelectExample extends Component {
       />
       
       </View>
-      {this.meta.touched && (this.meta.error && <Text style={styles.textError}>{this.meta.error}</Text>)}
     </View>
     </KeyboardAvoidingView>
   
@@ -94,7 +85,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 10,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'white',
   }, 
   pickerContainer2: {
     borderWidth: 1,
@@ -105,8 +96,8 @@ const styles = StyleSheet.create({
     paddingLeft:10,
     paddingRight:10,
     paddingTop:15,
-    marginBottom:10,
-    backgroundColor: '#f5f5f5',
+    marginBottom:12,
+    backgroundColor: 'white',
     borderColor: 'gray',
   }, 
   listContainer: {
