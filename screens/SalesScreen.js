@@ -1,7 +1,8 @@
 import React from 'react';
+import { Image, StyleSheet, View ,FlatList} from 'react-native';
 import { connect } from 'react-redux';
-import { Image, StyleSheet, View } from 'react-native';
-import { withTheme, Text, Button } from 'react-native-paper';
+import { withTheme, Text, Button,Card,FAB,Paragraph } from 'react-native-paper';
+
 import { ScrollView } from 'react-native-gesture-handler';
 import * as firebase from "firebase";
 
@@ -27,14 +28,16 @@ function SalesScreen({ theme, navigation, mySales }) {
           fontFamily: 'dosis',
           marginLeft: '5%',
           marginRight: '5%',
-          justifyContent: 'center',            
+          justifyContent: 'center', 
+          marginTop:15             
           
         }}
         onPress={() => navigation.navigate('EditSaleScreen')}>
         NUEVA VENTA
       </Button>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        
+
+
       </ScrollView>
     </View>
   );
@@ -47,6 +50,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#fff',
     fontFamily: 'dosis-regular',
+    
   },
   contentContainer: {
     paddingTop: 30,

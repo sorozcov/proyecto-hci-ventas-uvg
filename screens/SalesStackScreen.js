@@ -18,7 +18,8 @@ function SalesStackScreen({ theme }) {
           fontFamily: 'dosis-bold',
           
         },
-      })} initialRouteName="Mis Ventas">
+        headerMode: 'screen'
+      })} initialRouteName="SalesScreen">
       <SalesStack.Screen name="SalesScreen" component={SalesScreen} />
       <SalesStack.Screen name="EditSaleScreen"   options={{ title: 'NUEVA VENTA', headerTitleAlign:'center'}} component={EditSaleScreen} />
     </SalesStack.Navigator>

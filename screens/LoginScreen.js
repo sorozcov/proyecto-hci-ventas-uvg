@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, View,Modal,Alert,Keyboard ,KeyboardAvoidingView} from 'react-native';
-import { TextInput, withTheme,ActivityIndicator ,Text, Button } from 'react-native-paper';
+import { Image, StyleSheet, ActivityIndicator,View,Modal,Alert,Keyboard ,KeyboardAvoidingView} from 'react-native';
+import { TextInput, withTheme,Text, Button } from 'react-native-paper';
 import { connect } from 'react-redux';
 import * as firebase from "firebase";
 
@@ -116,6 +116,8 @@ function LoginScreen({ theme, navigation, saveLoggedUser }) {
             placeholder="Ingresa tu correo"
             value={mailInput}
             onChangeText={changeMailInput}
+            returnKeyType={ "done" }
+            
           />
           <TextInput
             style={styles.inputContainerStyle}
@@ -125,6 +127,7 @@ function LoginScreen({ theme, navigation, saveLoggedUser }) {
             value={password}
             onChangeText={changePassword}
             secureTextEntry={true}
+            returnKeyType={ "done" }
           />
           <Button
             theme={roundness}
