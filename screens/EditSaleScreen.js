@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, View,KeyboardAvoidingView, Alert, Keyboard } from 'react-native';
+import { StyleSheet, View,KeyboardAvoidingView, Alert, Keyboard, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import { TextInput, withTheme, Text, Button, Modal, ActivityIndicator } from 'react-native-paper';
+import { TextInput, withTheme, Text, Button, Modal } from 'react-native-paper';
 import { reduxForm, Field } from 'redux-form';
 import { ScrollView } from 'react-native-gesture-handler';
 import ImagePicker,* as imageUploadFunctions from '../components/ImagePickerProduct';
