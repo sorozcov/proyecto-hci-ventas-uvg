@@ -16,7 +16,6 @@ function SalesScreen({ theme, navigation, mySalesNotSold,mySalesSold, selectSale
   const refFlatList = React.useRef(null);
   const [indexShowTab, changeIndexShowTab] = useState(0);
   useScrollToTop(refFlatList);
-  
   return (
     <View style={styles.container}>
       <Button

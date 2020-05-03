@@ -13,6 +13,7 @@ import * as actionsMySales from '../src/actions/mySales';
 import * as selectors from '../src/reducers';
 import MyTextInput from '../components/textInput';
 import PickerInput from '../components/PickerInput';
+import SwitchInput from '../components/SwitchInput';
 
 
 function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categories, saveSale, deleteSale, loggedUser, initialValues }) {
@@ -40,8 +41,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
       }
 
       values.image = values.image!==undefined ? values.image : null;
-      if(values.image!==null){
-        console.log(values.image);
+      if(values.image!==null && (isNew || imageUploadFunctions.isEdited(values.image, initialValues.image))){
         let blob = await imageUploadFunctions.uriToBlob(values.image);
     
         
@@ -60,24 +60,40 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
       });
       let dateCreated = new Date();
       dateCreated = dateCreated.getTime();
-      var newSaleInfo = {
-        saleid: uid, 
-        name: values.name,
-        description: values.description,
-        price: values.price,
-        state: values.state[0],
-        category: selectedCategories,
-        categories:categoriesFilter,
-        image: values.image,
-        user: loggedUser,
-        dateCreated:dateCreated,
-        isSold: false,
-        usersSaveForLater: [],
-      };
-
-      newSaleDoc.set(newSaleInfo);
-      setmodalVisibleIndicatorSale(false);
-      saveSale(navigation, newSaleInfo, isNew);
+      if(isNew){
+        var newSaleInfo = {
+          saleid: uid, 
+          name: values.name,
+          description: values.description,
+          price: values.price,
+          state: values.state[0],
+          category: selectedCategories,
+          categories:categoriesFilter,
+          image: values.image,
+          user: loggedUser,
+          dateCreated:dateCreated,
+          isSold: false,
+          usersSaveForLater: [],
+        };
+        newSaleDoc.set(newSaleInfo);
+        setmodalVisibleIndicatorSale(false);
+        saveSale(navigation, newSaleInfo, isNew);
+      } else {
+        var editSaleInfo = {
+          saleid: uid,
+          name: values.name,
+          description: values.description,
+          price: values.price,
+          state: values.state[0],
+          category: selectedCategories,
+          categories:categoriesFilter,
+          dateLastEdited:dateCreated,
+          isSold: values.isSold,
+        };
+        newSaleDoc.update(editSaleInfo);
+        setmodalVisibleIndicatorSale(false);
+        saveSale(navigation, editSaleInfo, isNew);
+      }
 
     } catch (error) {
       console.log("ERROR" + error.toString());
@@ -127,16 +143,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
     <View style={{...styles.container}}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
         <Field name={'image'} component={ImagePicker} image={isNew ? null : initialValues.image}/>
-        {!isNew && <View style={styles.containerSwitch}>
-          <Text style={styles.textSwitchStyle} >{'Vendido:'}</Text>
-          <Switch
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={true ? "white" : "#03A9F4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={() => console.log('')}
-            value={initialValues.isSold}
-          />
-        </View>}
+        {!isNew && <Field name={'isSold'} component={SwitchInput} title={'Vendido:'} />} 
         <Field name={'name'} component={MyTextInput} label='Título' placeholder='Ingresa el nombre del producto' maxLength={20} />
         <Field name={'description'} component={MyTextInput} label='Descripción' placeholder='Ingresa una descripción' multiline={true}/>
         <Field name={'price'} component={MyTextInput} label='Precio' placeholder='Ingresa el precio que tendrá el producto' keyboardType='numeric'/>
@@ -235,19 +242,9 @@ const styles = StyleSheet.create({
     padding: '4%',
     fontSize:16
   },
-  textSwitchStyle:{ 
-    fontFamily: 'dosis-regular',
-    padding: '4%',
-    fontSize:16
-  },
   containerTooltip: {
     flex: 1,
     flexDirection: 'row',
-  },
-  containerSwitch: {
-    flex: 1,
-    flexDirection: 'row',
-    marginLeft:'4%',
   },
   tooltipStyle: {
     width:30,

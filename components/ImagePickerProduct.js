@@ -11,6 +11,10 @@ import {Button,TextInput} from 'react-native-paper';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 
+export const isEdited = (imageLink, image) => {
+  return (imageLink !== `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/ProductImages%2F${image}_600x600.jpg?alt=media`);
+};
+
 export const uriToBlob = (uri) => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -83,17 +87,16 @@ export default class ImagePickerUser extends React.Component {
   
   state = {
     image: null,
-    actionPickerVisible:false
+    actionPickerVisible:false,
   };
   input = this.props.input;
   constructor(props){
     super(props)
-    //this.state.image = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/ProductImages%2F${props.image}.jpg?alt=media`;
-    
-  }
+    if(props.image != null)
+      this.state.image = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/ProductImages%2F${props.image}_600x600.jpg?alt=media`;
+  };
   render() {
     this.props.input.onChange(this.state.image)
-
     let { image,actionPickerVisible } = this.state;
     
     return (
@@ -143,7 +146,7 @@ export default class ImagePickerUser extends React.Component {
       }).then(result=>{
         if (!result.cancelled) {
             this.setState({ image: result.uri });
-            this.setState({ actionPickerVisible: false})
+            this.setState({ actionPickerVisible: false});
         }
 
       }) 
@@ -162,7 +165,7 @@ export default class ImagePickerUser extends React.Component {
       }).then(result=>{
             if (!result.cancelled) {
                 this.setState({ image: result.uri });
-                this.setState({ actionPickerVisible: false})
+                this.setState({ actionPickerVisible: false});
             }
 
           })    

@@ -81,10 +81,10 @@ export const getMySale = (state, saleid) => state.byId[saleid];
 export const getAllMySales = state => state.order.map(
   id => getMySale(state, id),
 ).filter(sale => sale != null);
-export const getMySales = state => state.order.filter(sale => !sale.isSold).map(
+export const getMySales = state => state.order.map(
   id => getMySale(state, id),
-).filter(sale => sale != null);
-export const getMySoldSales = state => state.order.filter(sale => sale.isSold).map(
+).filter(sale => !sale.isSold);
+export const getMySoldSales = state => state.order.map(
   id => getMySale(state, id),
-).filter(sale => sale != null);
+).filter(sale => sale.isSold);
 export const getMySaleSelected = (state) => state.mySaleSelected;

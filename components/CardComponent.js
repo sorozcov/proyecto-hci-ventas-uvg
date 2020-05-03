@@ -15,8 +15,8 @@ export default function CardSale(props) {
             changeShowModalInformation(!showModalInformation);
       }
   }
-  const imageUrl = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/ProductImages%2F${sale.image}_600x600.jpg?alt=media`
- console.log(imageUrl);
+  const imageUrl = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/ProductImages%2F${sale.image}_600x600.jpg?alt=media`;
+  
   //const imageUrl = "https://firebasestorage.googleapis.com/v0/b/proyectoapp-add00.appspot.com/o/5ugr1aI1GoZ0QudkbzbeyRAv1iJ3?alt=media"
   return (
         <View style={{flex:1}}> 
