@@ -8,6 +8,8 @@ import { ActionPicker } from 'react-native-action-picker';
 import * as firebase from "firebase";
 import {Avatar} from 'react-native-elements';
 import {Button,TextInput} from 'react-native-paper';
+import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 export const uriToBlob = (uri) => {
   return new Promise((resolve, reject) => {
@@ -29,6 +31,20 @@ export const uriToBlob = (uri) => {
     
     xhr.send(null);
   });
+}
+
+export const uriToBase64 = async(uri)=>{
+   let base64 = await  ImageManipulator.manipulateAsync(uri, [], { base64: true });
+   return base64.base64
+  
+}
+
+export const uploadToFirebaseBase64 = async (base64,uid) => {
+  let storageRef = await firebase.storage().ref();
+  let img = "ProductImages/" + uid+'.jpg';
+  let snapshot = await storageRef.child(img).putString(base64, 'base64', {contentType:'image/jpg'});
+  console.log('Uploaded a base64 string!');
+  return;
 }
 
 
@@ -105,13 +121,13 @@ export default class ImagePickerUser extends React.Component {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (status !== 'granted') {
-        alert('Sorry, we need camera roll permissions to make this work!');
+        alert('Lo siento, necesitamos los permisos de la cámara para funcionar!');
       }
     }
     if (Constants.platform.ios) {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
         if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
+          alert('Lo siento, necesitamos los permisos de la cámara para funcionar!');
         }
       }
     
@@ -120,10 +136,10 @@ export default class ImagePickerUser extends React.Component {
   _takeImage = async () => {
     try {
       let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: false,
         aspect: [4, 3],
-        quality: 1,
+        quality: 0.4,
       }).then(result=>{
         if (!result.cancelled) {
             this.setState({ image: result.uri });
@@ -139,10 +155,10 @@ export default class ImagePickerUser extends React.Component {
   _pickImage = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: false,
         aspect: [4, 3],
-        quality: 1,
+        quality: 0.4,
       }).then(result=>{
             if (!result.cancelled) {
                 this.setState({ image: result.uri });

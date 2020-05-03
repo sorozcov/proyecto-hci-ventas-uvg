@@ -127,7 +127,7 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
           ref={refFlatList}
           key={"FlatListAppSales"} 
           numColumns={2}
-          keyExtractor={(saleItem, index) => saleItem.saleId }
+          keyExtractor={(saleItem, index) => saleItem.saleid }
           onEndReachedThreshold={0.1}
           refreshing={refreshing}
           onRefresh={()=>{onRefresh(categoriesSearch)}}

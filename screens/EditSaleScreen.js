@@ -41,9 +41,13 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
 
       values.image = values.image!==undefined ? values.image : null;
       if(values.image!==null){
+        console.log(values.image);
         let blob = await imageUploadFunctions.uriToBlob(values.image);
+    
+        
+        //console.log(base64);
         let upload = await imageUploadFunctions.uploadToFirebase(blob,uid);
-          
+        //let upload = await imageUploadFunctions.uploadToFirebaseBase64(base64,uid);
         values.image = uid;
       }
       let selectedCategories = [];
@@ -179,7 +183,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
           {!isNew && <Button
             theme={roundness}
             color={'red'}
-            icon="cart"
+            icon="delete"
             height={50}
             mode="contained"
             labelStyle={{
