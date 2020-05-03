@@ -14,6 +14,7 @@ import * as actionsApplicationSales from '../src/actions/applicationSales';
 import * as selectors from '../src/reducers';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import FilterInput from '../components/FilterInput';
+import categories from '../src/reducers/categories';
 
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />;
 const RightContent = props => <FAB {...props} small style={{marginRight:10,backgroundColor:"white",color:'black'}} icon="whatsapp"onPress={() => console.log('Pressed')}/>;
@@ -25,12 +26,16 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
   const [categoriesSearch, setCategoriesSearch] = useState([]);
   const [loading, setLoading] = useState(false);
   const refFlatList = React.useRef(null);
-  const onRefresh = async ()=>{
+ 
+  const onRefresh = async (categoriesSearch)=>{
+    
     if(!refreshing){
       setRefreshing(true);
+      console.log(categoriesSearch);
+      console.log(categoriesSearch.length);
       if(categoriesSearch.length==0){
 
-        const newApplicationSales = await firebase.firestore().collection('sales').limit(20).get();
+        const newApplicationSales = await firebase.firestore().collection('sales').orderBy("dateCreated", "desc").limit(20).get();
         let appSales= [];
         newApplicationSales.docs.forEach(sale => {
           appSales.push(sale.data());
@@ -38,16 +43,16 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
         refresh(appSales);
         console.log("refresh without filters");
       }else{
-        let newApplicationSales = await firebase.firestore().collection('sales').where("categories", "array-contains", categoriesSearch[i]).get();
-        for (let i = 1; i < categoriesSearch.length; i++) {
-          const moreSales = await firebase.firestore().collection('sales').where("categories", "array-contains", categoriesSearch[i]).get();
-          newApplicationSales.concat(moreSales);
+        let newApplicationSales = await firebase.firestore().collection('sales');
+        for (let i = 0; i < categoriesSearch.length; i++) {
+          newApplicationSales = await newApplicationSales.where(`categories.${categoriesSearch[i]}`, "==", true);
         }
+        newApplicationSales = await newApplicationSales.get();
         let appSales= [];
         newApplicationSales.docs.forEach(sale => {
           appSales.push(sale.data());
         });
-
+        
         refresh(appSales);
         console.log("refresh with filters");
       }
@@ -61,7 +66,7 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
       if(categoriesSearch.length==0){
         setLoading(true);
         console.log(lastFetched);
-        const moreApplicationSales = await firebase.firestore().collection('sales').orderBy('name').startAfter(lastFetched).limit(20).get();
+        const moreApplicationSales = await firebase.firestore().collection('sales').orderBy("dateCreated", "desc").startAfter(lastFetched).limit(20).get();
         let appSales= [];
         moreApplicationSales.docs.forEach(sale => {
           appSales.push(sale.data());
@@ -72,13 +77,19 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
       }
     }
   };
+  const changeFilter = (newFilters) => {
+    setCategoriesSearch(newFilters);
+    onRefresh(newFilters);
+   
+  }
+
   useScrollToTop(refFlatList);
-  console.log(categoriesSearch);
+  
   return (
     <View style={styles.container}>
     <View style={{flex:0.12,marginBottom:(categoriesSearch.length>0 ?'12%':'2%')}}>
      <FilterInput title='Categorías' single={false} selectedText="Buscar por categorías..." placeholderText="Buscar por categorías..." options={categories.map(category => ({ label:category.name, value:category.categoryid }))} 
-            selectedItems={categoriesSearch} onSelectedItemsChange={(selectedItems)=>{setCategoriesSearch(selectedItems);onRefresh();}}/>
+            selectedItems={categoriesSearch} onSelectedItemsChange={changeFilter}/>
     </View>
       {/* <SegmentedControlTab
           values={[ "1 por Columna" , "2 por Columna"]}
@@ -108,7 +119,7 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
                    style={{textAlign:'center'}} />
         <Text style={styles.textStyle} >
           Lo sentimos. No hay ninguna venta para mostrar. </Text>
-        }
+        
         </View>
         }
       <FlatList style={{margin:0}}
@@ -119,7 +130,7 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
           keyExtractor={(saleItem, index) => saleItem.saleId }
           onEndReachedThreshold={0.1}
           refreshing={refreshing}
-          onRefresh={()=>{onRefresh()}}
+          onRefresh={()=>{onRefresh(categoriesSearch)}}
           onEndReached={()=> onLoadMore()}
           renderItem={(saleItem) => (
             

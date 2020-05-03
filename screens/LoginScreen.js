@@ -248,7 +248,7 @@ export default connect(
     async saveLoggedUser(navigation,user) {
       //Se cargan las categorias
       dispatch(actionsCategories.clearCategories());
-      const categories = await firebase.firestore().collection('categories').get();
+      const categories = await firebase.firestore().collection('categories').orderBy("name").get();
       categories.docs.map(doc=> dispatch(actionsCategories.addCategory(doc.data())));
       //Se cargan los usuarios
       const userLoggedIn = await firebase.firestore().collection('users').doc(user.uid).get();
@@ -258,7 +258,7 @@ export default connect(
       const userSales = await firebase.firestore().collection('sales').where('user.uid','==',user.uid).get();
       userSales.docs.map(sale => dispatch(actionsMySales.addMySale(sale.data())));
       //Se cargan las primeras 20 application sales
-      const applicationSales = await firebase.firestore().collection('sales').orderBy('name').limit(20).get();
+      const applicationSales = await firebase.firestore().collection('sales').orderBy("dateCreated", "desc").limit(20).get();
       let appSales= [];
       applicationSales.docs.forEach(sale => {
         appSales.push(sale.data());

@@ -20,7 +20,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
   const [modalVisibleIndicatorSale, setmodalVisibleIndicatorSale] = useState(false);
   const tooltipRef = useRef(null);
   const isNew = initialValues==null;
-  console.log(initialValues);
+  
   async function createSaleCollectionFirebase(values){
     Keyboard.dismiss();
     setmodalVisibleIndicatorSale(true);
@@ -39,17 +39,21 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
 
       values.image = values.image!==undefined ? values.image : null;
       if(values.image!==null){
-        console.log("hola")
         let blob = await imageUploadFunctions.uriToBlob(values.image);
-        let imageUrl = await imageUploadFunctions.uploadToFirebase(blob,uid);
-          console.log(imageUrl);
-          values.image = imageUrl;
+        let upload = await imageUploadFunctions.uploadToFirebase(blob,uid);
+          
+        values.image = uid;
       }
-      var selectedCategories = [];
+      let selectedCategories = [];
       values.category.map(categorySelectedId => {
         selectedCategories.push(categories.filter(category => category.categoryid === categorySelectedId)[0]);
       })
-
+      let categoriesFilter = {}
+      values.category.forEach(categoryId => {
+            categoriesFilter[categoryId]=true 
+      });
+      let dateCreated = new Date();
+      dateCreated = dateCreated.getTime();
       var newSaleInfo = {
         saleid: uid, 
         name: values.name,
@@ -57,9 +61,10 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
         price: values.price,
         state: values.state[0],
         category: selectedCategories,
-        categories:values.category,
+        categories:categoriesFilter,
         image: values.image,
         user: loggedUser,
+        dateCreated:dateCreated,
         isSold: false,
         usersSaveForLater: [],
       };

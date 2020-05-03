@@ -59,9 +59,7 @@ export const uploadToFirebase = async (blob,uid) => {
   let snapshot = await storageRef.child(img).put(blob, {
     contentType: 'image/jpeg'
   });
-  let imageUrl = await snapshot.ref.getDownloadURL();
-  console.log("up" + String(imageUrl))
-  return imageUrl;
+  return;
 }
  
 

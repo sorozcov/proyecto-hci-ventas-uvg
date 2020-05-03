@@ -1,7 +1,7 @@
 import React , { useRef,Component } from 'react';
 import { StyleSheet, View,KeyboardAvoidingView,Text} from 'react-native';
 
-
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 
 export default class MultiSelectExample extends Component {
   
