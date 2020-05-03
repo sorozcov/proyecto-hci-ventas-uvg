@@ -15,9 +15,9 @@ export default function CardSale(props) {
             changeShowModalInformation(!showModalInformation);
       }
   }
-  //const imageUrl = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/ProductImages%2F${sale.image}.jpg?alt=media`
+  const imageUrl = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/ProductImages%2F${sale.image}.jpg?alt=media`
  
-  const imageUrl = "https://firebasestorage.googleapis.com/v0/b/proyectoapp-add00.appspot.com/o/5ugr1aI1GoZ0QudkbzbeyRAv1iJ3?alt=media"
+  //const imageUrl = "https://firebasestorage.googleapis.com/v0/b/proyectoapp-add00.appspot.com/o/5ugr1aI1GoZ0QudkbzbeyRAv1iJ3?alt=media"
   return (
         <View style={{flex:1}}> 
         <Card onPress={()=> onCardClick()} style={{ margin: '1.1%',flex:0.5,backgroundColor:'white',elevation:10  }}>

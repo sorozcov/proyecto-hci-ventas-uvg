@@ -87,10 +87,10 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
   
   return (
     <View style={styles.container}>
-    <View style={{flex:0.12,marginBottom:(categoriesSearch.length>0 ?'12%':'2%')}}>
+    <ScrollView style={{marginBottom:'-130%'}}>
      <FilterInput title='Categorías' single={false} selectedText="Buscar por categorías..." placeholderText="Buscar por categorías..." options={categories.map(category => ({ label:category.name, value:category.categoryid }))} 
             selectedItems={categoriesSearch} onSelectedItemsChange={changeFilter}/>
-    </View>
+    </ScrollView>
       {/* <SegmentedControlTab
           values={[ "1 por Columna" , "2 por Columna"]}
           activeTabStyle={{backgroundColor:colors.primary}}
