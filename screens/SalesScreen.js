@@ -83,6 +83,7 @@ function SalesScreen({ theme, navigation, mySalesNotSold,mySalesSold, selectSale
         <FlatList style={{margin:0}}
           data={mySalesNotSold}
           ref={refFlatList}
+          key={"mySalesNotSold"}
          
           numColumns={2}
           keyExtractor={(saleItem, index) => saleItem.saleid}
@@ -97,6 +98,7 @@ function SalesScreen({ theme, navigation, mySalesNotSold,mySalesSold, selectSale
         <FlatList style={{margin:0}}
           data={mySalesSold}
           ref={refFlatList}
+          key={"mySalesSold"}
          
           numColumns={2}
           keyExtractor={(saleItem, index) => saleItem.saleid}

@@ -72,13 +72,12 @@ export default class ImagePickerUser extends React.Component {
   input = this.props.input;
   constructor(props){
     super(props)
-    
-    
+    //this.state.image = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/ProductImages%2F${props.image}.jpg?alt=media`;
     
   }
   render() {
     this.props.input.onChange(this.state.image)
-    
+
     let { image,actionPickerVisible } = this.state;
     
     return (

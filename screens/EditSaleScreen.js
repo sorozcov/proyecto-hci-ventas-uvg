@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, View,KeyboardAvoidingView, Alert, Keyboard, ActivityIndicator } from 'react-native';
+import { StyleSheet, View,KeyboardAvoidingView, Alert, Keyboard, ActivityIndicator, Switch } from 'react-native';
 import { connect } from 'react-redux';
 import { withTheme, Text, Button, Modal, IconButton } from 'react-native-paper';
 import { Tooltip } from 'react-native-elements';
@@ -15,12 +15,14 @@ import MyTextInput from '../components/textInput';
 import PickerInput from '../components/PickerInput';
 
 
-function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categories, saveSale, loggedUser, initialValues }) {
+function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categories, saveSale, deleteSale, loggedUser, initialValues }) {
   const { colors, roundness } = theme;
   const [modalVisibleIndicatorSale, setmodalVisibleIndicatorSale] = useState(false);
   const tooltipRef = useRef(null);
   const isNew = initialValues==null;
-  
+  if(!isNew)
+    navigation.setOptions({ title: 'EDITAR VENTA' });
+
   async function createSaleCollectionFirebase(values){
     Keyboard.dismiss();
     setmodalVisibleIndicatorSale(true);
@@ -88,6 +90,31 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
       )},100)
     }
   }
+  async function deleteSaleCollectionFirebase(){
+    Keyboard.dismiss();
+    setmodalVisibleIndicatorSale(true);
+    //Se guarda la imagen
+    try {
+
+      firebase.firestore().collection('sales').doc(initialValues.saleid).delete();
+      setmodalVisibleIndicatorSale(false);
+      deleteSale(navigation, initialValues.saleid);
+
+    } catch (error) {
+      console.log("ERROR" + error.toString());
+      let errorMessage = "No se pudo eliminar la venta"
+      
+      setmodalVisibleIndicatorSale(false);
+      setTimeout(function(){
+      Alert.alert(
+      "Error",
+      errorMessage,
+      [
+        {text: 'OK', onPress: () => {}},
+      ],
+      )},100)
+    }
+  }
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -95,7 +122,17 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
     >
     <View style={{...styles.container}}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <Field name={'image'} component={ImagePicker} image={null}/>
+        <Field name={'image'} component={ImagePicker} image={isNew ? null : initialValues.image}/>
+        {!isNew && <View style={styles.containerSwitch}>
+          <Text style={styles.textSwitchStyle} >{'Vendido:'}</Text>
+          <Switch
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={true ? "white" : "#03A9F4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={() => console.log('')}
+            value={initialValues.isSold}
+          />
+        </View>}
         <Field name={'name'} component={MyTextInput} label='Título' placeholder='Ingresa el nombre del producto' maxLength={20} />
         <Field name={'description'} component={MyTextInput} label='Descripción' placeholder='Ingresa una descripción' multiline={true}/>
         <Field name={'price'} component={MyTextInput} label='Precio' placeholder='Ingresa el precio que tendrá el producto' keyboardType='numeric'/>
@@ -115,28 +152,51 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
           <Field name={'category'} component={PickerInput} title='Categoría' single={false} selectedText="Categoría" placeholderText="Seleccionar categoría" options={categories.map(category => ({ label:category.name, value:category.categoryid }))} 
             selectedItems={!isNew?initialValues.category.map(category => (category.categoryid)):[]}/>
         </View>
-        <Button
-          disabled={!(dirty && valid)}
-          theme={roundness}
-          color={'#000000'}
-          icon="cart"
-          height={50}
-          mode="contained"
-          labelStyle={{
-            fontFamily:"dosis-bold",
-            fontSize: 15,
-          }}
-          style={{
-            fontFamily: 'dosis',
-            marginLeft: '5%',
-            marginRight: '5%',
-            marginTop: '2%',
-            justifyContent: 'center',            
-            
-          }}
-          onPress={handleSubmit(createSaleCollectionFirebase)}>
-          {isNew ? 'CREAR' : 'EDITAR'}
-        </Button>
+        <View style={{marginTop:'2%'}}>
+          <Button
+            disabled={!(dirty && valid)}
+            theme={roundness}
+            color={'#000000'}
+            icon="cart"
+            height={50}
+            mode="contained"
+            labelStyle={{
+              fontFamily:"dosis-bold",
+              fontSize: 15,
+            }}
+            style={{
+              fontFamily: 'dosis',
+              marginLeft: '5%',
+              marginRight: '5%',
+              justifyContent: 'center',            
+              
+            }}
+            onPress={handleSubmit(createSaleCollectionFirebase)}>
+            {isNew ? 'CREAR' : 'EDITAR'}
+          </Button>
+        </View>
+        <View style={{marginTop:'2%'}}>
+          {!isNew && <Button
+            theme={roundness}
+            color={'red'}
+            icon="cart"
+            height={50}
+            mode="contained"
+            labelStyle={{
+              fontFamily:"dosis-bold",
+              fontSize: 15,
+            }}
+            style={{
+              fontFamily: 'dosis',
+              marginLeft: '5%',
+              marginRight: '5%',
+              justifyContent: 'center',            
+              
+            }}
+            onPress={() => deleteSaleCollectionFirebase()}>
+            {'ELIMINAR'}
+          </Button>}
+        </View>
         <Text style={styles.textStyle} >{'En esta aplicación solo esta permitido la venta de artículos para su uso en la Universidad del Valle de Guatemala.'}</Text>
         <Modal
             transparent={true}
@@ -171,9 +231,19 @@ const styles = StyleSheet.create({
     padding: '4%',
     fontSize:16
   },
+  textSwitchStyle:{ 
+    fontFamily: 'dosis-regular',
+    padding: '4%',
+    fontSize:16
+  },
   containerTooltip: {
     flex: 1,
     flexDirection: 'row',
+  },
+  containerSwitch: {
+    flex: 1,
+    flexDirection: 'row',
+    marginLeft:'4%',
   },
   tooltipStyle: {
     width:30,
@@ -207,11 +277,15 @@ export default connect(
     initialValues: selectors.getMySaleSelected(state),
   }),
   dispatch => ({
-    async saveSale(navigation, sale, isNew) {
+    saveSale(navigation, sale, isNew) {
       if(isNew)
         dispatch(actionsMySales.addMySale(sale));
       if(!isNew)
         dispatch(actionsMySales.changeMySale(sale));
+      navigation.navigate('SalesScreen');
+    },
+    deleteSale(navigation, saleid) {
+      dispatch(actionsMySales.deleteMySale(saleid));
       navigation.navigate('SalesScreen');
     },
   }),
