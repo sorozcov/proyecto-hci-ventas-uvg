@@ -90,7 +90,7 @@ export default function CardSale(props) {
         backdropTransitionOutTiming={600}>
         
             <View style={styles.content}>
-                <Text style={styles.contentTitle}>Hi 👋!</Text>
+                <Text style={styles.contentTitle}>{sale.name} 👋!</Text>
                 <IconButton testID={'close-button'}  icon="close"  size={30} style={{top:3,right:3,position:'absolute'}} mode="contained" onPress={()=>onCardClick()}  />
             </View>
         </Modal>
