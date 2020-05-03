@@ -42,9 +42,14 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
 
       values.image = values.image!==undefined ? values.image : null;
       if(values.image!==null && (isNew || imageUploadFunctions.isEdited(values.image, initialValues.image))){
-        let blob = await imageUploadFunctions.uriToBlob(values.image);
-    
-        
+
+        if(!isNew){ 
+          await firebase.storage().ref("ProductImages/" + uid + '.jpg').delete();
+          await firebase.storage().ref("ProductImages/" + uid + '_300x300.jpg').delete();
+          await firebase.storage().ref("ProductImages/" + uid + '_600x600.jpg').delete();
+        }
+
+        let blob = await imageUploadFunctions.uriToBlob(values.image);        
         //console.log(base64);
         let upload = await imageUploadFunctions.uploadToFirebase(blob,uid);
         //let upload = await imageUploadFunctions.uploadToFirebaseBase64(base64,uid);
@@ -91,7 +96,9 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
           isSold: values.isSold,
         };
         newSaleDoc.update(editSaleInfo);
-        setmodalVisibleIndicatorSale(false);
+        setTimeout(function(){
+          setmodalVisibleIndicatorSale(false);
+        },500)
         saveSale(navigation, editSaleInfo, isNew);
       }
 
@@ -116,7 +123,10 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
     //Se guarda la imagen
     try {
 
-      firebase.firestore().collection('sales').doc(initialValues.saleid).delete();
+      await firebase.firestore().collection('sales').doc(initialValues.saleid).delete();
+      await firebase.storage().ref("ProductImages/" + initialValues.saleid + '.jpg').delete();
+      await firebase.storage().ref("ProductImages/" + initialValues.saleid + '_300x300.jpg').delete();
+      await firebase.storage().ref("ProductImages/" + initialValues.saleid + '_600x600.jpg').delete();
       setmodalVisibleIndicatorSale(false);
       deleteSale(navigation, initialValues.saleid);
 
