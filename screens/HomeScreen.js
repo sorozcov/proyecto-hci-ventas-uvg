@@ -8,18 +8,12 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import ImagePicker from '../components/ImagePickerUser';
 
 import SalesStackScreen from './SalesStackScreen';
+import ProfileStackScreen from './ProfileStackScreen';
 import ExploreScreen from './ExploreScreen';
 
 
 
 
-function AnotherScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -54,7 +48,7 @@ function Main({theme, navigation}) {
                     style={{ marginTop: 0,paddingBottom:8 }}/>
                   ),
                 }} />
-         <Tab.Screen name="Perfil" component={AnotherScreen} options={{
+         <Tab.Screen name="Perfil" component={ProfileStackScreen} options={{
                    tabBarLabel: <Text style={{ fontSize: 12,fontFamily:'dosis-bold' }}> PERFIL </Text>,
                  
                   tabBarIcon: ({ color }) => (

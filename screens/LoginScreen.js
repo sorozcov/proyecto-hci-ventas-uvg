@@ -264,7 +264,7 @@ export default connect(
         appSales.push(sale.data());
       })
       dispatch(actionsApplicationSales.fetchNewSales(appSales));
-      navigation.navigate('Home');
+      navigation.replace('Home');
     },
   }),
 )(withTheme(LoginScreen));
