@@ -7,6 +7,12 @@ const loggedUser = (state = {}, action) => {
       var newState = action.payload;
       return newState;
     }
+    case types.USER_LOGGED_CHANGED: {
+      return {
+          ...state,
+          ...action.payload,
+        };
+    }
     case types.USER_LOGGED_OFF: {
       var newState = {};
       return newState;
