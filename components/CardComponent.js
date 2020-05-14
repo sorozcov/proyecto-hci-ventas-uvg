@@ -1,9 +1,10 @@
 import  React,{useState} from 'react';
-import { Card,Paragraph,IconButton,Button,Avatar} from 'react-native-paper';
-import { StyleSheet, View,Text,Linking,Alert } from 'react-native';
+import { Card,Paragraph,IconButton,Button,Avatar,Chip} from 'react-native-paper';
+import { StyleSheet, View,Text,Linking,Alert,ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import { change } from 'redux-form';
 import Image from 'react-native-image-progress';
+import { Dimensions } from "react-native";
 
 export default function CardSale(props) {
   const {indexShowTab,isMySale} = props;
@@ -15,8 +16,22 @@ export default function CardSale(props) {
             changeShowModalInformation(!showModalInformation);
       }
   }
+  const saleUserImage = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/UserImages%2F${sale.user.image}_600x600.jpg?alt=media`;
   const imageUrl = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/ProductImages%2F${sale.image}_600x600.jpg?alt=media`;
-  
+  function openWhatsapp(){
+    let url = 'whatsapp://send?text=' + `Hola ${sale.user.name}, vi tu producto ${sale.name} en UVGet y estoy interesado.` + '&phone=502' + `${sale.user.phoneNumber}`;
+    Linking.openURL(url).then((data) => {
+    console.log('WhatsApp Opened');
+    }).catch(() => {
+      Alert.alert(
+        "Whatsapp Error",
+        "Whatsapp no está instalado en su dispositivo.",
+        [
+          {text: 'Ok', onPress: () => {}},
+        ],
+       )
+    });
+  }
   //const imageUrl = "https://firebasestorage.googleapis.com/v0/b/proyectoapp-add00.appspot.com/o/5ugr1aI1GoZ0QudkbzbeyRAv1iJ3?alt=media"
   return (
         <View style={{flex:1}}> 
@@ -37,27 +52,13 @@ export default function CardSale(props) {
             <View style={{flex:1,flexDirection:'row'}}>
             <Paragraph style={{fontFamily:"dosis-bold",flex:0.7,color:'black',fontSize:indexShowTab==0 ? 18 : 15,marginTop:10,marginBottom:20,paddingRight:10}}>Q {sale.price} </Paragraph>
         
-            { !isMySale &&
+          { !isMySale &&
              <IconButton
             icon="whatsapp"
             color={"white"}
             style={{backgroundColor:"green",flex:0.35}}
             size={(indexShowTab==0 ? 25 : 17)}
-            onPress={() => {
-                let url = 'whatsapp://send?text=' + `Hola ${sale.user.name}, vi tu producto ${sale.name} en UVGet y estoy interesado.` + '&phone=502' + `${sale.user.phoneNumber}`;
-                Linking.openURL(url).then((data) => {
-                console.log('WhatsApp Opened');
-                }).catch(() => {
-                  Alert.alert(
-                    "Whatsapp Error",
-                    "Whatsapp no está instalado en su dispositivo.",
-                    [
-                      {text: 'Ok', onPress: () => {}},
-                    ],
-                   )
-                });
-            }
-          }
+            onPress={() => openWhatsapp()}
             /> 
           }
           { !isMySale &&
@@ -78,21 +79,60 @@ export default function CardSale(props) {
         </Card>
         <Modal
         testID={'modal'}
+        
         onBackdropPress={()=>onCardClick()} 
         isVisible={showModalInformation}
         backdropColor="#ACDCF1"
         backdropOpacity={0.8}
         animationIn="zoomInDown"
         animationOut="zoomOutUp"
-        animationInTiming={600}
-        animationOutTiming={600}
-        backdropTransitionInTiming={600}
-        backdropTransitionOutTiming={600}>
-        
-            <View style={styles.content}>
-                <Text style={styles.contentTitle}>{sale.name} 👋!</Text>
-                <IconButton testID={'close-button'}  icon="close"  size={30} style={{top:3,right:3,position:'absolute'}} mode="contained" onPress={()=>onCardClick()}  />
-            </View>
+        animationInTiming={500}
+        animationOutTiming={500}
+        backdropTransitionInTiming={500}
+        backdropTransitionOutTiming={500}
+        deviceWidth={Dimensions.get('window').width}
+        style={{marginHorizontal: 0,paddingTop:30,}}
+        >
+      
+            <ScrollView style={styles.content}>
+                <Image resizeMode="stretch" source={{ uri: imageUrl}} style={{height: 350,width:Dimensions.get('window').width}} />
+                <Text style={styles.contentTitle}>{sale.name}</Text>
+                {sale.isSold && <Text style={styles.contentTitleSold}>Este artículo ya ha sido marcado como vendido.</Text>}
+                <Text style={styles.contentTitleAtributte}>Descripción</Text>
+                <Text style={styles.contentDescription}>{sale.description}</Text>
+                <Text style={styles.contentTitleAtributte}>Detalles</Text>
+                <Text style={styles.contentAttributes}>Estado: {sale.state==1 ? "Nuevo" : "Usado"}</Text>
+                <Text style={styles.contentAttributes}>Precio: GTQ {sale.price}</Text>
+                
+                <View style={{flexDirection:'row',flexWrap:'wrap',width:Dimensions.get('window').width}}>
+                <Text style={styles.contentAttributes}>Categorías: </Text>
+                  {sale.category.map((cat,index)=>
+                      (<Chip  key={index} style={{marginLeft:10,padding:2,alignItems:'center',backgroundColor:'black',color:'white',marginTop:10}} textStyle={{color:'white',fontFamily:'dosis-light',fontSize:16,}} disabled={true} onPress={() => console.log('Pressed')}>{cat.name}</Chip>)
+                  
+                  )}
+                </View>
+                <Text style={styles.contentTitleAtributte}>Vendedor</Text>
+                
+                <Card.Title
+                    style={{marginBottom:10,marginTop:10}}
+                    titleStyle={{fontFamily:'dosis-semi-bold'}}
+                    subtitleStyle={{fontFamily:'dosis-light',fontSize:15}}
+                    title={sale.user.name + " " + sale.user.lastName}
+                    subtitle={sale.user.email + "\n"
+                   + sale.user.phoneNumber}
+                    subtitleNumberOfLines={2}
+                    
+                    left={(props) => sale.user.image!=null ? (<Avatar.Image {...props} size={48} source={{uri:saleUserImage}} />):(<Avatar.Icon size={48} {...props} icon='account' />)}
+                    right={(props) => <IconButton
+                      icon="whatsapp"
+                      color={"white"}
+                      style={{backgroundColor:"green",marginRight:15}}
+                      size={30}
+                      onPress={() => openWhatsapp()}
+                      /> }
+                  />
+                <IconButton testID={'close-button'}  icon="close"  size={30} style={{top:3,right:3,position:'absolute',backgroundColor:'white'}} mode="contained" onPress={()=>onCardClick()}  />
+            </ScrollView>
         </Modal>
     </View> 
     )
@@ -131,16 +171,57 @@ const styles = StyleSheet.create({
     },
     content: {
         backgroundColor: 'white',
-        padding: 22,
-        height:'83%',
         
-        justifyContent: 'center',
-        alignItems: 'center',
+        height:'100%',
+        bottom:0,
+        
+        
+       
+       
         borderRadius: 4,
         borderColor: 'rgba(0, 0, 0, 0.1)',
       },
       contentTitle: {
+        fontSize: 25,
+        alignSelf:'center',
+        fontFamily:'dosis-bold',
+        paddingTop:12,
+        paddingLeft:10,
+        paddingRight:10,
+        
+      },
+      contentTitleAtributte: {
         fontSize: 20,
-        marginBottom: 12,
+        paddingLeft:12,
+       
+        fontFamily:'dosis-bold',
+        paddingTop:10,
+        
+      },
+      contentTitleSold: {
+        fontSize: 20,
+        color:'red',
+        alignSelf:'center',
+        paddingLeft:10,
+        paddingRight:10,
+        fontFamily:'dosis-semi-bold',
+        paddingTop:12,
+        
+      },
+      contentDescription: {
+        fontSize: 20,
+        paddingLeft:20,
+        
+        fontFamily:'dosis-light',
+        paddingTop:10,
+        paddingBottom: 10,
+      },
+      contentAttributes: {
+        fontSize: 20,
+        paddingLeft:20,
+        
+        fontFamily:'dosis-light',
+        paddingTop:8,
+        
       },
   });
