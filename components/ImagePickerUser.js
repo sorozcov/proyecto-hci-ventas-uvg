@@ -111,7 +111,7 @@ export default class ImagePickerUser extends React.Component {
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: false,
         aspect: [4, 3],
-        quality: 1,
+        quality: 0.4,
       }).then(result=>{
         if (!result.cancelled) {
             this.setState({ image: result.uri });
@@ -130,7 +130,7 @@ export default class ImagePickerUser extends React.Component {
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: false,
         aspect: [4, 3],
-        quality: 1,
+        quality: 0.4,
       }).then(result=>{
             if (!result.cancelled) {
                 this.setState({ image: result.uri });
