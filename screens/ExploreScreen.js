@@ -35,7 +35,7 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
       console.log(categoriesSearch.length);
       if(categoriesSearch.length==0){
 
-        const newApplicationSales = await firebase.firestore().collection('sales').orderBy("dateCreated", "desc").limit(20).get();
+        const newApplicationSales = await firebase.firestore().collection('sales').where("isSold", "==", false).orderBy("dateCreated", "desc").limit(20).get();
         let appSales= [];
         newApplicationSales.docs.forEach(sale => {
           appSales.push(sale.data());
@@ -43,7 +43,7 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
         refresh(appSales);
         console.log("refresh without filters");
       }else{
-        let newApplicationSales = await firebase.firestore().collection('sales');
+        let newApplicationSales = await firebase.firestore().collection('sales').where("isSold", "==", false);
         for (let i = 0; i < categoriesSearch.length; i++) {
           newApplicationSales = await newApplicationSales.where(`categories.${categoriesSearch[i]}`, "==", true);
         }
@@ -66,7 +66,7 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
       if(categoriesSearch.length==0){
         setLoading(true);
         console.log(lastFetched);
-        const moreApplicationSales = await firebase.firestore().collection('sales').orderBy("dateCreated", "desc").startAfter(lastFetched).limit(20).get();
+        const moreApplicationSales = await firebase.firestore().collection('sales').where("isSold", "==", false).orderBy("dateCreated", "desc").startAfter(lastFetched).limit(20).get();
         let appSales= [];
         moreApplicationSales.docs.forEach(sale => {
           appSales.push(sale.data());

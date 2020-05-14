@@ -258,7 +258,7 @@ export default connect(
       const userSales = await firebase.firestore().collection('sales').where('user.uid','==',user.uid).get();
       userSales.docs.map(sale => dispatch(actionsMySales.addMySale(sale.data())));
       //Se cargan las primeras 20 application sales
-      const applicationSales = await firebase.firestore().collection('sales').orderBy("dateCreated", "desc").limit(20).get();
+      const applicationSales = await firebase.firestore().collection('sales').where("isSold", "==", false).orderBy("dateCreated", "desc").limit(20).get();
       let appSales= [];
       applicationSales.docs.forEach(sale => {
         appSales.push(sale.data());
