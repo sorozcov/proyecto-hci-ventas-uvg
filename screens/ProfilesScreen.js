@@ -1,6 +1,7 @@
 import React,{useState} from 'react';
 import { Image, StyleSheet, View ,FlatList} from 'react-native';
 import { connect } from 'react-redux';
+import Constants from 'expo-constants';
 import { withTheme, Text, Button,Card,FAB,Avatar } from 'react-native-paper';
 import CardComponent from '../components/CardComponent';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -22,27 +23,27 @@ function ProfileScreen({ theme, navigation, user }) {
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
-        {user.image!=null &&  <Avatar.Image style={{alignSelf:'center'}} size={190} source={{ uri: image }}  />}
-        {user.image==null &&  <Avatar.Icon  style={{alignSelf:'center'}}  size={190} icon="account" color="black"  />}
+        {user.image!=null &&  <Avatar.Image style={{alignSelf:'center'}} size={Constants.platform.ios ? 190 : 140} source={{ uri: image }}  />}
+        {user.image==null &&  <Avatar.Icon  style={{alignSelf:'center'}}  size={Constants.platform.ios ? 190 : 140} icon="account" color="black"  />}
         <Text style={{
               fontFamily: 'dosis-bold',
               alignSelf: 'center', 
               marginTop:15,
-              fontSize:35,
+              fontSize:Constants.platform.ios ? 35 : 28,
               textTransform:'uppercase'             
         }}>{user.name + " " + user.lastName}</Text>
         <Text style={{
               fontFamily: 'dosis-light',
               alignSelf: 'center', 
               marginTop:15,
-              fontSize:20,
+              fontSize:Constants.platform.ios ? 20 : 18,
               textTransform:'uppercase'     
         }}>{"Correo " + user.email}</Text>
         <Text style={{
               fontFamily: 'dosis-light',
               alignSelf: 'center', 
               marginTop:15,
-              fontSize:20,
+              fontSize:Constants.platform.ios ? 20 : 18,
               textTransform:'uppercase'          
         }}>{"Teléfono " + user.phoneNumber}</Text>
       </View>
