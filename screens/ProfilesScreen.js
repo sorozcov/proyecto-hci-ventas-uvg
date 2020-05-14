@@ -57,7 +57,7 @@ function SalesScreen({ theme, navigation, mySalesNotSold,mySalesSold, selectSale
           marginTop:15             
           
         }}
-        onPress={() => newSale(navigation)}>
+        onPress={() => navigation.navigate('EditProfileScreen')}>
         NUEVA VENTA
       </Button>
       <Button
