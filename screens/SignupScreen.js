@@ -142,7 +142,7 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit, initialVa
               
             }}
             onPress={handleSubmit(signUp)}>
-            {isNew ? 'REGISTRARSE' : 'EDITAR USUARIO'}
+            {isNew ? 'REGISTRARSE' : 'EDITAR PERFIL'}
           </Button>
         </View>
         <Modal
