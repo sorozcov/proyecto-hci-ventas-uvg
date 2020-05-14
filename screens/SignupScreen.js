@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, View,Keyboard,Alert,KeyboardAvoidingView,ActivityIndicator } from 'react-native';
+import { connect } from 'react-redux';
 import { TextInput, withTheme, Text, Button ,Avatar, Modal} from 'react-native-paper';
 import { reduxForm, Field } from 'redux-form';
 import { ScrollView } from 'react-native-gesture-handler';
-import ImagePicker,* as imageUploadFunctions from '../components/ImagePickerUser';
 import * as firebase from "firebase";
 import 'firebase/firestore';
-import MyTextInput from '../components/textInput';
 
+
+import ImagePicker,* as imageUploadFunctions from '../components/ImagePickerUser';
+import MyTextInput from '../components/textInput';
+import * as actionsLoggedUser from '../src/actions/loggedUser';
+import * as selectors from '../src/reducers';
 
 
 async function createUserCollectionFirebase ({email,name,lastName,image,phoneNumber,uid}){
@@ -28,9 +32,11 @@ async function createUserCollectionFirebase ({email,name,lastName,image,phoneNum
 
 
 
-function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
+function SignupScreen({ theme, navigation, dirty, valid, handleSubmit, initialValues, saveUser }) {
   const { colors, roundness } = theme;
   const [modalVisibleIndicatorLogin, setmodalVisibleIndicatorLogin] = useState(false);
+  const isNew = initialValues.uid==null;
+  
   const signUp = values => {
     console.log('submitting form', values)
     signupFirebase(values)
@@ -39,18 +45,18 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
   async function signupFirebase({email, password,name,lastName,image,phoneNumber}) {
     Keyboard.dismiss();
     setmodalVisibleIndicatorLogin(true);
-     try {
-         
-         await firebase.auth().createUserWithEmailAndPassword(email, password);
-         let uid = await firebase.auth().currentUser.uid;
-         image = image!==undefined ? image : null;
-         if(image!==null){
-            let blob = await imageUploadFunctions.uriToBlob(image);
-            await imageUploadFunctions.uploadToFirebase(blob,uid);
-           
-            image = uid;
+    try {
+      if(isNew){
+        await firebase.auth().createUserWithEmailAndPassword(email, password);
+        let uid = await firebase.auth().currentUser.uid;
+        image = image!==undefined ? image : null;
+        if(image!==null){
+          let blob = await imageUploadFunctions.uriToBlob(image);
+          await imageUploadFunctions.uploadToFirebase(blob,uid);
+          
+          image = uid;
         }
-          await createUserCollectionFirebase({email,name,lastName,image,phoneNumber,uid}) 
+        await createUserCollectionFirebase({email,name,lastName,image,phoneNumber,uid}) 
           await firebase.auth().currentUser.sendEmailVerification()
          setmodalVisibleIndicatorLogin(false);
          setTimeout(function(){
@@ -63,7 +69,21 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
           )},100)
          // Navigate to the Home page, the user is auto logged in
          navigation.navigate('Login')
-     } catch (error) {
+      } else {
+        const userDoc = firebase.firestore().collection('users').doc(initialValues.uid);
+        let uid = userDoc.id;
+        image = image!==undefined ? image : null;
+        if(image!==null && imageUploadFunctions.isEdited(image, initialValues.image)){
+          let blob = await imageUploadFunctions.uriToBlob(image);
+          await imageUploadFunctions.uploadToFirebase(blob,uid);
+          
+          image = uid;
+        }
+        await userDoc.update({email,name,lastName,image,phoneNumber,uid})
+        saveUser(navigation, {email,name,lastName,image,phoneNumber,uid})
+      }
+      
+    } catch (error) {
          console.log(error.toString());
          let errorMessage = ""
          switch(error.toString()) {
@@ -72,7 +92,7 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
             break;
 
           default:
-            errorMessage = "No se pudo crear el usuario."
+            errorMessage = isNew ? "No se pudo crear el usuario." : "No se pudo editar el usuario."
         }
          setmodalVisibleIndicatorLogin(false);
          setTimeout(function(){
@@ -94,19 +114,19 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
     <View style={styles.container}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
         <View style={styles.formContainer}>
-          <Text style={{...styles.titleStyle, color: colors.accent, }}>Registro</Text>
-          <Field name={'image'} component={ImagePicker} image={null}/>
+          { isNew && (<Text style={{...styles.titleStyle, color: colors.accent, }}>Registro</Text>)}
+          <Field name={'image'} component={ImagePicker} image={isNew ? null : initialValues.image}/>
           <Field name={'name'} component={MyTextInput} label='Nombre' placeholder='Ingresa tu nombre'/>
           <Field name={'lastName'} component={MyTextInput} label='Apellido' placeholder='Ingresa tu apellido'/>
-          <Field name={'email'} component={MyTextInput} label='Correo' placeholder='Ingresa tu correo' keyboardType='email-address'/>
-          <Field name={'password'} component={MyTextInput} label='Contraseña' placeholder='Ingresa tu contraseña' secureTextEntry={true}/>
-          <Field name={'passwordConfirm'} component={MyTextInput} label='Confirmación Contraseña' placeholder='Confirma tu contraseña' secureTextEntry={true}/>
+          <Field name={'email'} component={MyTextInput} label='Correo' placeholder='Ingresa tu correo' keyboardType='email-address' disabled={isNew ? null : true}/>
+          { isNew && (<Field name={'password'} component={MyTextInput} label='Contraseña' placeholder='Ingresa tu contraseña' secureTextEntry={true}/>)}
+          { isNew && (<Field name={'passwordConfirm'} component={MyTextInput} label='Confirmación Contraseña' placeholder='Confirma tu contraseña' secureTextEntry={true}/>)}
           <Field name={'phoneNumber'} component={MyTextInput} label='Teléfono' placeholder='Ingresa tu número de teléfono' keyboardType='number-pad'/>
           <Button
             disabled={!(dirty && valid)}
             theme={roundness}
             color={'#000000'}
-            icon="login"
+            icon={isNew ? 'login' : 'pencil'}
             height={50}
             mode="contained"
             labelStyle={{
@@ -122,7 +142,7 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
               
             }}
             onPress={handleSubmit(signUp)}>
-            REGISTRARSE
+            {isNew ? 'REGISTRARSE' : 'EDITAR USUARIO'}
           </Button>
         </View>
         <Modal
@@ -135,9 +155,9 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit }) {
               </View>
             </View>
         </Modal>    
-        <Text style={styles.textStyle}>¿Ya tienes una cuenta?  
+        { isNew && (<Text style={styles.textStyle}>¿Ya tienes una cuenta?  
           <Text style={{...styles.textStyle, color: colors.accent }} onPress={() => navigation.navigate('Login') }> Inicia Sesión</Text>
-        </Text>
+        </Text>)}
         </ScrollView>
     </View>
    
@@ -195,8 +215,19 @@ const styles = StyleSheet.create({
   }
 });
 
-export default reduxForm({ 
+export default connect(
+  state => ({
+    initialValues: selectors.getLoggedUser(state),
+  }),
+  dispatch => ({
+    saveUser(navigation, sale) {
+      dispatch(actionsLoggedUser.changeLoggedUser(sale));
+      navigation.navigate('ProfilesScreen');
+    },
+  }),
+)(reduxForm({ 
   form: 'signUp',
+  enableReinitialize : true,
   validate: (values) => {
     const errors = {};
     errors.name = !values.name
@@ -228,4 +259,4 @@ export default reduxForm({
 
     return errors;
   }
-})(withTheme(SignupScreen));
+})(withTheme(SignupScreen)));
