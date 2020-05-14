@@ -114,7 +114,7 @@ export default function CardSale(props) {
                 <Text style={styles.contentTitleAtributte}>Vendedor</Text>
                 
                 <Card.Title
-                    style={{marginBottom:10,marginTop:10}}
+                    style={{marginBottom:20,marginTop:10}}
                     titleStyle={{fontFamily:'dosis-semi-bold'}}
                     subtitleStyle={{fontFamily:'dosis-light',fontSize:15}}
                     title={sale.user.name + " " + sale.user.lastName}
