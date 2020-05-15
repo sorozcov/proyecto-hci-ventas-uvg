@@ -153,7 +153,7 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop:"12%",
+    marginTop: Platform.OS == "ios"? "15%" : "8%",
     flexDirection: 'column',
     backgroundColor: '#fff',
     fontFamily: 'dosis-regular',

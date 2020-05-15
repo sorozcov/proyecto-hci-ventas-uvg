@@ -120,7 +120,7 @@ function SalesScreen({ theme, navigation, mySalesNotSold,mySalesSold, selectSale
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop:"15%",
+    marginTop: Platform.OS == "ios"? "15%" : "8%",
     flexDirection: 'column',
     backgroundColor: '#fff',
     fontFamily: 'dosis-regular',

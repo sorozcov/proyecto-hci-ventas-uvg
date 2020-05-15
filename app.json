@@ -9,7 +9,9 @@
     ],
    
     "androidStatusBar": {
-        "barStyle": "dark-content"
+        "barStyle": "dark-content",
+        "hidden": false,
+        "backgroundColor": "#00C331"
     },
 
     "version": "1.0.0",
