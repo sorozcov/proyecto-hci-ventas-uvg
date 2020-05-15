@@ -19,11 +19,10 @@ import * as actionsLoggedUser from '../src/actions/loggedUser';
 
 function ProfileScreen({ theme, navigation, user, logout }) {
   const { colors, roundness } = theme;
-  
   const image = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/UserImages%2F${user.image}_600x600.jpg?alt=media` ;
   return (
     <View style={styles.container}>
-      <View style={styles.profileContainer}>
+      { user.uid != null && <View style={styles.profileContainer}>
         {user.image!=null &&  <Avatar.Image style={{alignSelf:'center'}} size={Constants.platform.ios ? 190 : 140} source={{ uri: image }}  />}
         {user.image==null &&  <Avatar.Icon  style={{alignSelf:'center'}}  size={Constants.platform.ios ? 190 : 140} icon="account" color="black"  />}
         <Text style={{
@@ -47,7 +46,7 @@ function ProfileScreen({ theme, navigation, user, logout }) {
               fontSize:Constants.platform.ios ? 20 : 18,
               textTransform:'uppercase'          
         }}>{"Teléfono " + user.phoneNumber}</Text>
-      </View>
+      </View>}
       <View style={styles.bottomContainer}>
           <Button
             theme={roundness}
