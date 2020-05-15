@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form'
 
+import { USER_LOGGED_OFF } from '../types/loggedUser';
 import loggedUser, * as loggedUserSelectors from './loggedUser';
 import sales, * as salesSelectors from './sales';
 import categories, * as categoriesSelectors from './categories';
@@ -13,8 +14,15 @@ const reducer = combineReducers({
   form: formReducer,
 });
 
+const rootReducer = (state, action) => {
+  if (action.type === USER_LOGGED_OFF) {
+    state = undefined
+  }
 
-export default reducer;
+  return reducer(state, action)
+}
+
+export default rootReducer;
 
 //Selectors de usuarios
 export const getLoggedUser = state => loggedUserSelectors.getLoggedUser(state.loggedUser);

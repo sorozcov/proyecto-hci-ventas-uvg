@@ -18,7 +18,7 @@ import categories from '../src/reducers/categories';
 
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />;
 const RightContent = props => <FAB {...props} small style={{marginRight:10,backgroundColor:"white",color:'black'}} icon="whatsapp"onPress={() => console.log('Pressed')}/>;
-function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,lastFetched,categories }) {
+function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,lastFetched,categories, savedSales }) {
   const { colors, roundness } = theme;
   const [indexShowTab, changeIndexShowTab] = useState(1);
   const [data, changeData] = useState([]);
@@ -26,7 +26,6 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
   const [categoriesSearch, setCategoriesSearch] = useState([]);
   const [loading, setLoading] = useState(false);
   const refFlatList = React.useRef(null);
- 
   const onRefresh = async (categoriesSearch)=>{
     
     if(!refreshing){
@@ -134,7 +133,7 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
           onEndReached={()=> onLoadMore()}
           renderItem={(saleItem) => (
             
-            <CardComponent indexShowTab={1} sale={saleItem} onCardClick={null} isMySale={false}/>
+            <CardComponent indexShowTab={1} sale={saleItem} onCardClick={null} isMySale={false} saved={savedSales.filter(sale => sale.saleid === saleItem.item.saleid).length === 1}/>
            )
            
           }
@@ -169,7 +168,8 @@ const styles = StyleSheet.create({
     fontFamily: 'dosis-regular',
   },
   contentContainer: {
-    paddingTop: 0
+    paddingTop: 0,
+    marginBottom: 20,
   },
   
   textStyle:{
@@ -185,6 +185,7 @@ export default connect(
     applicationSales: selectors.getAllSales(state),
     lastFetched: selectors.getLastFetched(state),
     categories: selectors.getCategories(state),
+    savedSales: selectors.getSavedSales(state),
   }),
   dispatch => ({
     refresh(appSales) {

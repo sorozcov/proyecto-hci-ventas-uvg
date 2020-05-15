@@ -1,19 +1,19 @@
 import omit from 'lodash/omit';
 import { combineReducers } from 'redux';
 
-import * as types from '../types/mySales';
+import * as types from '../types/savedSales';
 
 
 const order = (state = [], action) => {
   switch (action.type) {
-    case types.USER_SALE_ADDED: {
+    case types.SAVED_SALE_ADDED: {
       return [...state, action.payload.saleid];
     }
-    case types.USER_SALE_DELETED: {
+    case types.SAVED_SALE_DELETED: {
       const newState = state.filter(sale => sale !==  action.payload);
       return newState;
     }
-    case types.USER_SALES_CLEAR: {
+    case types.SAVED_SALES_CLEAR: {
       const newState = [];
       return newState;
     }
@@ -25,16 +25,16 @@ const order = (state = [], action) => {
 
 const byId = (state = {}, action) => {
   switch (action.type) {
-    case types.USER_SALE_ADDED: {
+    case types.SAVED_SALE_ADDED: {
       return {
         ...state,
         [action.payload.saleid]: action.payload,
       };
     }
-    case types.USER_SALE_DELETED: {
-      return omit(state, action.payload.saleid);
+    case types.SAVED_SALE_DELETED: {
+      return omit(state, action.payload);
     }
-    case types.USER_SALES_CLEAR: {
+    case types.SAVED_SALES_CLEAR: {
       const newState = {};
       return newState;
     }
