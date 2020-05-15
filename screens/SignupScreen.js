@@ -82,7 +82,7 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit, initialVa
           
           image = imageUid;
         }else{
-          image = userDoc.data().image;
+          image = (await userDoc.get()).data().image;
         }
         await userDoc.update({email,name,lastName,image,phoneNumber,uid})
         saveUser(navigation, {email,name,lastName,image,phoneNumber,uid})
@@ -150,7 +150,13 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit, initialVa
             {isNew ? 'REGISTRARSE' : 'EDITAR PERFIL'}
           </Button>
         </View>
-        <Modal
+         
+        { isNew && (<Text style={styles.textStyle}>¿Ya tienes una cuenta?  
+          <Text style={{...styles.textStyle, color: colors.accent }} onPress={() => navigation.navigate('Login') }> Inicia Sesión</Text>
+        </Text>)}
+        </ScrollView>
+    </View>
+    <Modal
             transparent={true}
             animationType={'none'}
             visible={modalVisibleIndicatorLogin}>
@@ -159,13 +165,7 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit, initialVa
               <ActivityIndicator size="large" animating={modalVisibleIndicatorLogin} color={colors.primary}/>
               </View>
             </View>
-        </Modal>    
-        { isNew && (<Text style={styles.textStyle}>¿Ya tienes una cuenta?  
-          <Text style={{...styles.textStyle, color: colors.accent }} onPress={() => navigation.navigate('Login') }> Inicia Sesión</Text>
-        </Text>)}
-        </ScrollView>
-    </View>
-   
+        </Modal>   
     </KeyboardAvoidingView>
   );
 }

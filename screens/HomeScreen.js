@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View,StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import {withTheme} from 'react-native-paper';
@@ -20,7 +20,7 @@ const Tab = createMaterialBottomTabNavigator();
 function Main({theme, navigation}) {
   const {colors} = theme;
   return (
-    
+      <KeyboardAvoidingView style={{flex:1}}>
       <Tab.Navigator
         initialRouteName="Home"
         activeColor="#f0edf6"
@@ -59,7 +59,7 @@ function Main({theme, navigation}) {
                 }} />
              
       </Tab.Navigator>
-    
+      </KeyboardAvoidingView>
   );
 }
 

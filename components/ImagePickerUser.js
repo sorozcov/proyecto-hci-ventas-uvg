@@ -1,6 +1,6 @@
 import * as React from 'react';
 import  { useState } from 'react';
-import {  Image, View } from 'react-native';
+import { Image, View, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
@@ -71,9 +71,9 @@ export default class ImagePickerUser extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         
-        {!image &&  <Avatar.Icon size={100} icon="account" color="white"  />}
+        {!image &&  <Avatar.Icon size={Constants.platform.ios ? 165:100} icon="account" color="white"  />}
 
-        {image &&  <Avatar.Image style={{alignSelf:'center'}} size={100} source={{ uri: image }}  />}
+        {image &&  <Avatar.Image style={{alignSelf:'center'}} size={Constants.platform.ios ? 165:100} source={{ uri: image }}  />}
         <Button labelStyle={{fontFamily:"dosis-bold"}} onPress={()=>this.setState({ actionPickerVisible: true })} >Cambiar Imagen</Button>
         <ActionPicker
             style={{fontFamily:"dosis-medium"}}
