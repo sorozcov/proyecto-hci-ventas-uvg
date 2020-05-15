@@ -1,19 +1,17 @@
 {
   "expo": {
-    "name": "proyecto-hci-ventas-uvg",
-    "slug": "proyecto-hci-ventas-uvg",
+    "name": "UVGet",
+    "slug": "uvget",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
-   
     "androidStatusBar": {
-        "barStyle": "dark-content",
-        "hidden": false,
-        "backgroundColor": "#00C331"
+      "barStyle": "dark-content",
+      "hidden": false,
+      "backgroundColor": "#00C331"
     },
-
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logoUVGet.png",
@@ -30,8 +28,14 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.hci.uvget",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
-    }
-    
+    },
+    "android": {
+      "package": "com.hci.uvget",
+      "versionCode": 1
+    },
+    "description": ""
   }
 }
