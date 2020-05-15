@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import { Image, StyleSheet, View ,FlatList} from 'react-native';
 import { connect } from 'react-redux';
 import Constants from 'expo-constants';
@@ -18,13 +18,40 @@ import { Font } from 'expo';
 
 function ProfileScreen({ theme, navigation, user }) {
   const { colors, roundness } = theme;
-  
-  const image = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/UserImages%2F${user.image}_600x600.jpg?alt=media` ;
+  const [image, setImage] = useState(null);
+  const [errorLoadingImage, setErrorLoadingImage] = useState(false);
+  useEffect(()=>{async function getImage(){
+    
+    if(!errorLoadingImage){
+      
+      try{
+        
+        if(user.image!=null){
+            let img = await firebase.storage().ref().child(`UserImages/${user.image}_600x600.jpg`).getDownloadURL();
+            setImage(img);
+            
+        } 
+      }catch(error){
+        
+        
+          setErrorLoadingImage(true);
+          setTimeout(getImage,1000);
+      
+      }
+    }
+  }
+  getImage();
+
+  },[user.image])
+ 
+
+  //const image = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/UserImages%2F${user.image}_600x600.jpg?alt=media` ;
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
-        {user.image!=null &&  <Avatar.Image style={{alignSelf:'center'}} size={Constants.platform.ios ? 190 : 140} source={{ uri: image }}  />}
-        {user.image==null &&  <Avatar.Icon  style={{alignSelf:'center'}}  size={Constants.platform.ios ? 190 : 140} icon="account" color="black"  />}
+        {image!=null &&  <Avatar.Image  style={{alignSelf:'center'}} size={Constants.platform.ios ? 190 : 140} source={{ uri: image }} onError={()=>console.log("error")}  />}
+        {image==null &&  <Avatar.Icon  style={{alignSelf:'center'}}  size={Constants.platform.ios ? 190 : 140} icon="account" color="black"  />}
+        
         <Text style={{
               fontFamily: 'dosis-bold',
               alignSelf: 'center', 

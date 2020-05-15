@@ -1,10 +1,11 @@
-import  React,{useState} from 'react';
+import  React,{useState,useEffect} from 'react';
 import { Card,Paragraph,IconButton,Button,Avatar,Chip} from 'react-native-paper';
 import { StyleSheet, View,Text,Linking,Alert,ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import { change } from 'redux-form';
 import Image from 'react-native-image-progress';
 import { Dimensions } from "react-native";
+import * as firebase from "firebase";
 
 export default function CardSale(props) {
   const {indexShowTab,isMySale} = props;
@@ -16,8 +17,34 @@ export default function CardSale(props) {
             changeShowModalInformation(!showModalInformation);
       }
   }
+  const [imageUrl, setImage] = useState(null);
+  const [errorLoadingImage, setErrorLoadingImage] = useState(false);
+  useEffect(()=>{async function getImage(){
+    
+    if(!errorLoadingImage){
+      console.log("hola")
+      try{
+        
+        if(sale.image!=null){
+            let img = await firebase.storage().ref().child(`ProductImages/${sale.image}_600x600.jpg`).getDownloadURL();
+            console.log('if');
+            setImage(img);
+            
+        } 
+      }catch(error){
+        
+          console.log(error)
+          setErrorLoadingImage(true);
+          setTimeout(getImage,1000);
+      
+      }
+    }
+  }
+  getImage();
+
+  },[sale.image])
   const saleUserImage = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/UserImages%2F${sale.user.image}_600x600.jpg?alt=media`;
-  const imageUrl = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/ProductImages%2F${sale.image}_600x600.jpg?alt=media`;
+  //const imageUrl = `https://firebasestorage.googleapis.com/v0/b/uvget-hci.appspot.com/o/ProductImages%2F${sale.image}_600x600.jpg?alt=media`;
   function openWhatsapp(){
     let url = 'whatsapp://send?text=' + `Hola ${sale.user.name}, vi tu producto ${sale.name} en UVGet y estoy interesado.` + '&phone=502' + `${sale.user.phoneNumber}`;
     Linking.openURL(url).then((data) => {
@@ -47,7 +74,8 @@ export default function CardSale(props) {
             
         </Card.Title>
         
-        <Image resizeMode="stretch" source={{ uri: imageUrl}} style={{height: 200}} />
+        <Image  resizeMode="stretch" source={{ uri: (imageUrl==null ? undefined : imageUrl)}} style={{height: 200}} />
+        {console.log(imageUrl)}
         <Card.Content >
             <View style={{flex:1,flexDirection:'row'}}>
             <Paragraph style={{fontFamily:"dosis-bold",flex:0.7,color:'black',fontSize:indexShowTab==0 ? 18 : 15,marginTop:10,marginBottom:20,paddingRight:10}}>Q {sale.price} </Paragraph>
@@ -122,7 +150,7 @@ export default function CardSale(props) {
                    + sale.user.phoneNumber}
                     subtitleNumberOfLines={2}
                     
-                    left={(props) => sale.user.image!=null ? (<Avatar.Image {...props} size={48} source={{uri:saleUserImage}} />):(<Avatar.Icon size={48} {...props} icon='account' />)}
+                    left={(props) => sale.user.image!=null ? (<Avatar.Image key={sale.user.image} {...props} size={48} source={{uri:saleUserImage}} />):(<Avatar.Icon size={48} {...props} icon='account' />)}
                     right={(props) => <IconButton
                       icon="whatsapp"
                       color={"white"}

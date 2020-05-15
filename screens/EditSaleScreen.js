@@ -14,7 +14,7 @@ import * as selectors from '../src/reducers';
 import MyTextInput from '../components/textInput';
 import PickerInput from '../components/PickerInput';
 import SwitchInput from '../components/SwitchInput';
-
+let UUIDGenerator = require('react-native-uuid');
 
 function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categories, saveSale, deleteSale, loggedUser, initialValues }) {
   const { colors, roundness } = theme;
@@ -32,28 +32,37 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
 
       var newSaleDoc = null;
       var uid = "";
+      let image = null;
       if(isNew){
         newSaleDoc = firebase.firestore().collection('sales').doc();
         uid = newSaleDoc.id;
       } else {
         newSaleDoc = firebase.firestore().collection('sales').doc(initialValues.saleid);
         uid = newSaleDoc.id;
+        image=(await newSaleDoc.get()).data().image;
       }
-
+      
       values.image = values.image!==undefined ? values.image : null;
       if(values.image!==null && (isNew || imageUploadFunctions.isEdited(values.image, initialValues.image))){
 
         if(!isNew){ 
-          await firebase.storage().ref("ProductImages/" + uid + '.jpg').delete();
-          await firebase.storage().ref("ProductImages/" + uid + '_300x300.jpg').delete();
-          await firebase.storage().ref("ProductImages/" + uid + '_600x600.jpg').delete();
+          try{
+            
+            await firebase.storage().ref("ProductImages/" + image + '.jpg').delete();
+            await firebase.storage().ref("ProductImages/" + image + '_300x300.jpg').delete();
+            // await firebase.storage().ref("ProductImages/" + image + '_600x600.jpg').delete();
+          }catch(error){
+            console.log("Error eliminando imagenes.")
+          }
         }
 
         let blob = await imageUploadFunctions.uriToBlob(values.image);        
         //console.log(base64);
-        let upload = await imageUploadFunctions.uploadToFirebase(blob,uid);
-        //let upload = await imageUploadFunctions.uploadToFirebaseBase64(base64,uid);
-        values.image = uid;
+        let imageUid =  UUIDGenerator.v4();
+        await imageUploadFunctions.uploadToFirebase(blob,imageUid);
+        values.image = imageUid;
+      }else{
+        values.image = image;
       }
       let selectedCategories = [];
       values.category.map(categorySelectedId => {
@@ -94,6 +103,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
           categories:categoriesFilter,
           dateLastEdited:dateCreated,
           isSold: values.isSold,
+          image:values.image,
         };
         newSaleDoc.update(editSaleInfo);
         setTimeout(function(){
@@ -103,7 +113,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
       }
 
     } catch (error) {
-      console.log("ERROR" + error.toString());
+      console.log(error);
       let errorMessage = "No se pudo guardar la venta"
       
       setmodalVisibleIndicatorSale(false);
@@ -329,3 +339,5 @@ export default connect(
     return errors;
   }
 })(withTheme(EditSaleScreen)));
+
+

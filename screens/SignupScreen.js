@@ -12,7 +12,7 @@ import ImagePicker,* as imageUploadFunctions from '../components/ImagePickerUser
 import MyTextInput from '../components/textInput';
 import * as actionsLoggedUser from '../src/actions/loggedUser';
 import * as selectors from '../src/reducers';
-
+let UUIDGenerator = require('react-native-uuid');
 
 async function createUserCollectionFirebase ({email,name,lastName,image,phoneNumber,uid}){
   let db = firebase.firestore();
@@ -52,9 +52,11 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit, initialVa
         image = image!==undefined ? image : null;
         if(image!==null){
           let blob = await imageUploadFunctions.uriToBlob(image);
-          await imageUploadFunctions.uploadToFirebase(blob,uid);
+          let imageUid =  UUIDGenerator.v4();
+          Console.log(imageUid);
+          await imageUploadFunctions.uploadToFirebase(blob,imageUid);
           
-          image = uid;
+          image = imageUid;
         }
         await createUserCollectionFirebase({email,name,lastName,image,phoneNumber,uid}) 
           await firebase.auth().currentUser.sendEmailVerification()
@@ -75,9 +77,12 @@ function SignupScreen({ theme, navigation, dirty, valid, handleSubmit, initialVa
         image = image!==undefined ? image : null;
         if(image!==null && imageUploadFunctions.isEdited(image, initialValues.image)){
           let blob = await imageUploadFunctions.uriToBlob(image);
-          await imageUploadFunctions.uploadToFirebase(blob,uid);
+          let imageUid = await UUIDGenerator.v4();
+          await imageUploadFunctions.uploadToFirebase(blob,imageUid);
           
-          image = uid;
+          image = imageUid;
+        }else{
+          image = userDoc.data().image;
         }
         await userDoc.update({email,name,lastName,image,phoneNumber,uid})
         saveUser(navigation, {email,name,lastName,image,phoneNumber,uid})
