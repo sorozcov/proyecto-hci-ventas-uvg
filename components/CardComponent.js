@@ -27,21 +27,16 @@ function CardSale(props) {
   useEffect(()=>{async function getImage(){
     
     if(!errorLoadingImage){
-      console.log("hola")
       try{
         
         if(sale.image!=null){
             let img = await firebase.storage().ref().child(`ProductImages/${sale.image}_600x600.jpg`).getDownloadURL();
-            console.log('if');
             setImage(img);
             
         } 
       }catch(error){
-        
-          console.log(error)
           setErrorLoadingImage(true);
           setTimeout(getImage,1000);
-      
       }
     }
   }
@@ -96,7 +91,7 @@ function CardSale(props) {
         </Card.Title>
         
         <Image  resizeMode="stretch" source={{ uri: (imageUrl==null ? undefined : imageUrl)}} style={{height: 200}} />
-        {console.log(imageUrl)}
+
         <Card.Content >
             <View style={{flex:1,flexDirection:'row'}}>
             <Paragraph style={{fontFamily:"dosis-bold",flex:0.7,color:'black',fontSize:indexShowTab==0 ? 18 : 15,marginTop:10,marginBottom:20,paddingRight:10}}>Q {sale.price} </Paragraph>
