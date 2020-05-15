@@ -1,14 +1,19 @@
 import  React,{useState,useEffect} from 'react';
+import  { connect } from 'react-redux';
 import { Card,Paragraph,IconButton,Button,Avatar,Chip} from 'react-native-paper';
 import { StyleSheet, View,Text,Linking,Alert,ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import { change } from 'redux-form';
 import Image from 'react-native-image-progress';
 import { Dimensions } from "react-native";
+import * as actionsSavedSales from '../src/actions/savedSales';
 import * as firebase from "firebase";
 
-export default function CardSale(props) {
-  const {indexShowTab,isMySale} = props;
+import * as selectors from '../src/reducers';
+
+
+function CardSale(props) {
+  const {indexShowTab,isMySale, loggedUser, saveSavedSale, removeSavedSale, saved } = props;
   let {onCardClick} = props;
   const sale = props.sale.item;
   const [showModalInformation, changeShowModalInformation] = useState(false);
@@ -59,6 +64,22 @@ export default function CardSale(props) {
        )
     });
   }
+  async function saveSale(){
+    var saleDoc = firebase.firestore().collection('sales').doc(sale.saleid);
+    var saleEdited = await (await saleDoc.get()).data();
+    var usersSaveForLater = saleEdited.usersSaveForLater;
+    if(usersSaveForLater.includes(loggedUser.uid)){
+      usersSaveForLater = usersSaveForLater.filter(userid => userid!==loggedUser.uid);
+      await saleDoc.update({usersSaveForLater: usersSaveForLater});
+      saleEdited = { ...saleEdited , usersSaveForLater: usersSaveForLater };
+      removeSavedSale(saleEdited);
+    } else {
+      usersSaveForLater.push(loggedUser.uid);
+      await saleDoc.update({usersSaveForLater: usersSaveForLater});
+      saleEdited = { ...saleEdited , usersSaveForLater: usersSaveForLater };
+      saveSavedSale(saleEdited);
+    }
+  }
   //const imageUrl = "https://firebasestorage.googleapis.com/v0/b/proyectoapp-add00.appspot.com/o/5ugr1aI1GoZ0QudkbzbeyRAv1iJ3?alt=media"
   return (
         <View style={{flex:1}}> 
@@ -91,11 +112,11 @@ export default function CardSale(props) {
           }
           { !isMySale &&
             <IconButton
-            icon="bookmark"
+            icon={ saved ? "bookmark-check" : "bookmark"}
             color={"white"}
-            style={{backgroundColor:"#03A9F4",flex:0.35}}
+            style={{backgroundColor:"black",flex:0.35}}
             size={(indexShowTab==0 ? 25 : 17)}
-            onPress={() => console.log('Pressed')}
+            onPress={() => saveSale()}
             />
           }
             </View>
@@ -142,7 +163,7 @@ export default function CardSale(props) {
                 <Text style={styles.contentTitleAtributte}>Vendedor</Text>
                 
                 <Card.Title
-                    style={{marginBottom:10,marginTop:10}}
+                    style={{marginBottom:20,marginTop:10}}
                     titleStyle={{fontFamily:'dosis-semi-bold'}}
                     subtitleStyle={{fontFamily:'dosis-light',fontSize:15}}
                     title={sale.user.name + " " + sale.user.lastName}
@@ -253,3 +274,17 @@ const styles = StyleSheet.create({
         
       },
   });
+
+export default connect(
+  state => ({
+    loggedUser: selectors.getLoggedUser(state),
+  }),
+  dispatch => ({
+    saveSavedSale(sale) {
+      dispatch(actionsSavedSales.saveSale(sale));
+    },
+    removeSavedSale(sale) {
+      dispatch(actionsSavedSales.unsaveSale(sale.saleid));
+    },
+  }),
+)(CardSale); 

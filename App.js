@@ -13,8 +13,8 @@ import configureStore from './store';
 import configureFirebase from './firebase/firebase'
 import HomeScreen from './screens/HomeScreen';
 
-
-
+//Mute warnings
+console.disableYellowBox = true;
 
 //Se crea el store
 const store = configureStore();

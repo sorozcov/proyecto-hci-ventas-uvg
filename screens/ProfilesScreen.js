@@ -14,9 +14,10 @@ import SegmentedControlTab from "react-native-segmented-control-tab";
 import { Asset } from 'react-native-unimodules';
 
 import { Font } from 'expo';
+import * as actionsLoggedUser from '../src/actions/loggedUser';
 
 
-function ProfileScreen({ theme, navigation, user }) {
+function ProfileScreen({ theme, navigation, user, logout }) {
   const { colors, roundness } = theme;
   const [image, setImage] = useState(null);
   const [errorLoadingImage, setErrorLoadingImage] = useState(false);
@@ -73,7 +74,7 @@ function ProfileScreen({ theme, navigation, user }) {
               fontSize:Constants.platform.ios ? 20 : 18,
               textTransform:'uppercase'          
         }}>{"Teléfono " + user.phoneNumber}</Text>
-      </View>
+      </View>}
       <View style={styles.bottomContainer}>
           <Button
             theme={roundness}
@@ -93,7 +94,7 @@ function ProfileScreen({ theme, navigation, user }) {
               marginTop:15             
               
             }}
-            onPress={() => null}>
+            onPress={() => navigation.navigate("SavedSalesScreen")}>
             MIS VENTAS GUARDADAS
           </Button>
           <Button
@@ -135,7 +136,7 @@ function ProfileScreen({ theme, navigation, user }) {
               marginTop:15             
               
             }}
-            onPress={() => navigation.replace('Login')}>
+            onPress={() => logout(navigation)}>
             CERRAR SESIÓN
           </Button>
       </View>
@@ -191,6 +192,9 @@ export default connect(
     user: selectors.getLoggedUser(state),
   }),
   dispatch => ({
-  
+    logout(navigation) {
+      dispatch(actionsLoggedUser.logout());
+      navigation.replace('Login');
+    },
   }),
 )(ProfileScreen);
