@@ -7,8 +7,13 @@ import EditSaleScreen from './EditSaleScreen';
 
 const SalesStack = createStackNavigator();
 
-function SalesStackScreen({ theme }) {
+function SalesStackScreen({ theme, navigation, route }) {
   const { colors } = theme;
+  if(route.state && route.state.index > 0) {
+    navigation.setOptions({tabBarVisible: false})
+  } else {
+    navigation.setOptions({tabBarVisible: true})
+  };
   return (
     <SalesStack.Navigator screenOptions={({ route }) => 
       ({

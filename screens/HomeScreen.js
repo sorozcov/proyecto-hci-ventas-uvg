@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {withTheme} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -15,51 +15,53 @@ import ExploreScreen from './ExploreScreen';
 
 
 
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
 function Main({theme, navigation}) {
   const {colors} = theme;
   return (
-      <KeyboardAvoidingView style={{flex:1}}>
       <Tab.Navigator
-        initialRouteName="Home"
-        activeColor="#f0edf6"
-        inactiveColor="#000000"
-        keyboardHidesTabBar={true}
-        shifting={false}
-        
-        
-        barStyle={{ backgroundColor: colors.primary ,paddingBottom:10,paddingTop:10,fontSize:'30px'}}
-      >
+        initialRouteName="Explorar"
+        tabBarOptions={{
+          keyboardHidesTabBar:true,
+          activeBackgroundColor:"#f0edf6",
+          activeTintColor:"white",
+          inactiveTintColor:"black",
+          inactiveBackgroundColor:"#000000",
+          tabStyle:{ backgroundColor: colors.primary ,paddingBottom:8,paddingTop:20,marginTop:-15,fontSize:'50px'},
+          labelStyle:{fontSize: 12,fontFamily:'dosis-bold'}
+        }}
+        >
        
         <Tab.Screen name="Explorar"  component={ExploreScreen}
-                options={{
-                  tabBarLabel: <Text style={{ fontSize: 12,fontFamily:'dosis-bold' }}> EXPLORAR </Text>,
-                  
-                  tabBarIcon: ({ color }) => (
-                    <MaterialCommunityIcons name="cart" color={color} size={25}
-                    style={{ marginTop: 0,paddingBottom:8 }} />
-                  ),
-                }} />
-        <Tab.Screen name="Mis Ventas" component={SalesStackScreen} options={{
-                   tabBarLabel: <Text style={{ fontSize: 12,fontFamily:'dosis-bold' }}> MIS VENTAS </Text>,
-                  tabBarIcon: ({ color }) => (
-                    <MaterialCommunityIcons name="shopify" color={color} size={25}
-                    style={{ marginTop: 0,paddingBottom:8 }}/>
-                  ),
-                }} />
-         <Tab.Screen name="Perfil" component={ProfileStackScreen} options={{
-                   tabBarLabel: <Text style={{ fontSize: 12,fontFamily:'dosis-bold' }}> PERFIL </Text>,
-                 
-                  tabBarIcon: ({ color }) => (
-                    <MaterialCommunityIcons name="account"  color={color} size={25}
-                    style={{ marginTop: 0,paddingBottom:8 }}  />
-                  ),
-                  
-                }} />
+          options={{            
+            tabBarLabel: 'EXPLORAR',
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="cart" color={color} size={25}
+              style={{ marginTop: 0,paddingBottom:8 }} />
+            ),
+          }}
+        />
+        <Tab.Screen name="Mis Ventas" component={SalesStackScreen} 
+          options={{
+            tabBarLabel: 'MIS VENTAS',
+            tabBarIcon: ({ color }) => (
+             <MaterialCommunityIcons name="shopify" color={color} size={25}
+             style={{ marginTop: 0,paddingBottom:8 }}/>
+           ),
+         }}/>
+         <Tab.Screen name="Perfil" component={ProfileStackScreen}
+          options={{
+            tabBarLabel: 'PERFIL',
+          
+           tabBarIcon: ({ color }) => (
+             <MaterialCommunityIcons name="account"  color={color} size={25}
+             style={{ marginTop: 0,paddingBottom:8 }}  />
+           ),
+           
+         }}/>
              
       </Tab.Navigator>
-      </KeyboardAvoidingView>
   );
 }
 

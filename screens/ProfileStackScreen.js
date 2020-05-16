@@ -8,8 +8,13 @@ import SavedSalesScreen from './SavedSalesScreen';
 
 const ProfilesStack = createStackNavigator();
 
-function ProfilesStackScreen({ theme }) {
+function ProfilesStackScreen({ theme, route, navigation }) {
   const { colors } = theme;
+  if(route.state && route.state.index > 0) {
+    navigation.setOptions({tabBarVisible: false})
+  } else {
+    navigation.setOptions({tabBarVisible: true})
+  };
   return (
     <ProfilesStack.Navigator screenOptions={({ route }) => 
       ({
