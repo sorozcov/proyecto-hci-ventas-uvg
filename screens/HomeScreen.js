@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { Text, View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {withTheme} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import {Constants} from 'expo';
 import ImagePicker from '../components/ImagePickerUser';
 
 import SalesStackScreen from './SalesStackScreen';
@@ -28,7 +28,7 @@ function Main({theme, navigation}) {
           activeTintColor:"white",
           inactiveTintColor:"black",
           inactiveBackgroundColor:"#000000",
-          tabStyle:{ backgroundColor: colors.primary ,paddingBottom:8,paddingTop:20,marginTop:-15,fontSize:'50px'},
+          tabStyle:{ backgroundColor: colors.primary ,paddingBottom:Platform.OS=="ios" ?38:8,marginBottom:Platform.OS=="ios" ? -40:0,paddingTop:20,marginTop:-15,fontSize:'50px'},
           labelStyle:{fontSize: 12,fontFamily:'dosis-bold'}
         }}
         >

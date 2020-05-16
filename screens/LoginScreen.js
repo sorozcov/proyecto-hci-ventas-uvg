@@ -156,6 +156,9 @@ function LoginScreen({ theme, navigation, saveLoggedUser }) {
         <Text style={styles.textStyle}>¿Olvidaste tu contraseña?
           <Text style={{...styles.textStyle, color: colors.accent }} onPress={() => resetPassword(mailInput)}> Recuperar contraseña.</Text>
         </Text>
+        <Text style={styles.textStyle}>¿No tienes una cuenta?  
+          <Text style={{...styles.textStyle, color: colors.accent, }} onPress={() => navigation.navigate('Signup') }> Regístrate</Text>
+        </Text>
         </View>    
        
       </View>
@@ -173,12 +176,7 @@ function LoginScreen({ theme, navigation, saveLoggedUser }) {
             
          
     
-      <View style={styles.bottomContainer}>
-      
-        <Text style={styles.textStyle}>¿No tienes una cuenta?  
-          <Text style={{...styles.textStyle, color: colors.accent, }} onPress={() => navigation.navigate('Signup') }> Regístrate</Text>
-        </Text>
-      </View>
+
     </View>
     </KeyboardAvoidingView>
   );
@@ -223,7 +221,7 @@ const styles = StyleSheet.create({
     fontFamily: 'dosis-semi-bold',
     fontSize:16,
     paddingTop:'4%',
-    paddingBottom:'4%'
+    
   },
   modalBackground: {
     flex: 1,

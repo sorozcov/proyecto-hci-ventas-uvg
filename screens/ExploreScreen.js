@@ -121,7 +121,7 @@ function ExploreScreen({ theme, navigation,applicationSales,refresh,loadMore,las
         
         </View>
         }
-      <FlatList style={{margin:0}}
+      <FlatList style={{margin:0,}}
           data={applicationSales}
           ref={refFlatList}
           key={"FlatListAppSales"} 
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 0,
-    marginBottom: 20,
+    marginBottom: 23,
   },
   
   textStyle:{
