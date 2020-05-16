@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 0,
-    marginBottom: 23,
+    marginBottom: Platform.OS == "ios"? 23 : 50,
   },
   
   textStyle:{
