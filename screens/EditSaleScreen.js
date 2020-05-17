@@ -132,11 +132,12 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
     setmodalVisibleIndicatorSale(true);
     //Se guarda la imagen
     try {
-
+      let collection = await firebase.firestore().collection('sales').doc(initialValues.saleid).get();
+      let image = await collection.data().image
       await firebase.firestore().collection('sales').doc(initialValues.saleid).delete();
-      await firebase.storage().ref("ProductImages/" + initialValues.saleid + '.jpg').delete();
-      await firebase.storage().ref("ProductImages/" + initialValues.saleid + '_300x300.jpg').delete();
-      await firebase.storage().ref("ProductImages/" + initialValues.saleid + '_600x600.jpg').delete();
+      await firebase.storage().ref("ProductImages/" + image + '.jpg').delete();
+      await firebase.storage().ref("ProductImages/" + image + '_300x300.jpg').delete();
+      await firebase.storage().ref("ProductImages/" + image + '_600x600.jpg').delete();
       setmodalVisibleIndicatorSale(false);
       deleteSale(navigation, initialValues.saleid);
 
