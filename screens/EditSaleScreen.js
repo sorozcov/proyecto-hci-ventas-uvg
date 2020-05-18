@@ -186,7 +186,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
         <Field name={'name'} component={MyTextInput} label='Título' placeholder='Ingresa el nombre del producto' maxLength={20} />
         <Field name={'description'} component={MyTextInput} label='Descripción' placeholder='Ingresa una descripción' multiline={true}/>
         <Field name={'price'} component={MyTextInput} label='Precio' placeholder='Ingresa el precio que tendrá el producto' keyboardType='numeric'/>
-        <Field name={'state'} component={PickerInput} title='Estado' single={true} selectedText="Estado" placeholderText="Seleccionar estado" options={[{ label:'Nuevo', value:"1" }, { label:'Usado como Nuevo', value:"2" }, { label:'Usado al 50%', value:"3" }, { label:'Usado con bastante desgaste', value:"4" }]} 
+        <Field name={'state'} component={PickerInput} title='Estado' single={true} selectedText="Estado" placeholderText="Seleccionar estado" options={[{ label:'Nuevo', value:"1" }, { label:'Usado como Nuevo', value:"2" }, { label:'Usado al 50%', value:"3" }, { label:'Usado con Desgaste', value:"4" }]} 
           selectedItems={!isNew?[initialValues.state]:[]}/>
         <View style={styles.containerTooltip}>
           <View style={styles.tooltipStyle}>
