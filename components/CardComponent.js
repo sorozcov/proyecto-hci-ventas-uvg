@@ -181,11 +181,7 @@ function CardSale(props) {
                       style={{backgroundColor:"red",marginRight:15}}
                       size={30}
                       
-                      onPress={() => openComposer({
-                        to: sale.user.email,
-                        subject: `Producto UVGET ${sale.name}`,
-                        body: `Hola ${sale.user.name}, estoy interesado en tu producto ${sale.name}.`
-                     })}
+                      onPress={() => Linking.openURL(`mailTo:${sale.user.email}?subject=Producto UVGET ${sale.name}&body=Hola ${sale.user.name}, estoy interesado en tu producto ${sale.name}.`)}
                       /> 
                       </View>}
                   />
