@@ -1,19 +1,29 @@
-import React from 'react';
+import React, { useState} from 'react';
 import { Switch, StyleSheet, View } from 'react-native';
+import { connect } from 'react-redux';
 import { Text } from 'react-native-paper';
+import * as firebase from "firebase";
+
+import * as actionsMySales from '../src/actions/mySales';
 
 
-export default function SwitchInput(props) {
-  const { input, meta, ...inputProps } = props;
+function SwitchInput(props) {
+  const [value, changeValue] = useState(props.isSold);
+  async function saveSaleSold(){
+    const sold = !value;
+    changeValue();
+    await firebase.firestore().collection('sales').doc(props.saleid).update({ isSold: sold});
+    props.saveSale({ saleid: props.saleid, isSold: sold});
+  }
   return (
     <View style={styles.containerSwitch}>
-      <Text style={styles.textSwitchStyle} >{inputProps.title}</Text>
+      <Text style={styles.textSwitchStyle} >{props.title}</Text>
       <Switch
-        trackColor={{ false: "#767577", true: "#81b0ff" }}
+        trackColor={{ false: "#767577", true: "#00C331" }}
         thumbColor={true ? "white" : "#03A9F4"}
         ios_backgroundColor="#3e3e3e"
-        onValueChange={input.onChange}
-        value={input.value}
+        onValueChange={saveSaleSold}
+        value={value}
       />
     </View>
   );
@@ -25,10 +35,21 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     marginLeft:'4%',
+    marginTop:-10
   },
   textSwitchStyle:{ 
     fontFamily: 'dosis-regular',
     padding: '4%',
-    fontSize:16
+    fontSize:12,
+    marginTop: 19,
   },
 });
+
+export default connect(
+  undefined,
+  dispatch => ({
+    saveSale(sale) {
+      dispatch(actionsMySales.changeMySale(sale));
+    },
+  }),
+)(SwitchInput);

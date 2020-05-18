@@ -10,7 +10,7 @@ import * as actionsSavedSales from '../src/actions/savedSales';
 import * as firebase from "firebase";
 
 import * as selectors from '../src/reducers';
-import { openComposer } from 'react-native-email-link'
+import SwitchInput from '../components/SwitchInput';
 
 function CardSale(props) {
   const {indexShowTab,isMySale, loggedUser, saveSavedSale, removeSavedSale, saved } = props;
@@ -114,6 +114,7 @@ function CardSale(props) {
             onPress={() => saveSale()}
             />
           }
+          {isMySale && <SwitchInput saleid={sale.saleid} isSold={sale.isSold} title={'Vendido:'} />} 
             </View>
             
             

@@ -102,7 +102,6 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
           category: selectedCategories,
           categories:categoriesFilter,
           dateLastEdited:dateCreated,
-          isSold: values.isSold,
           image:values.image,
         };
         newSaleDoc.update(editSaleInfo);
@@ -164,7 +163,6 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
     <View style={{...styles.container}}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
         <Field name={'image'} component={ImagePicker} image={isNew ? null : initialValues.image}/>
-        {!isNew && <Field name={'isSold'} component={SwitchInput} title={'Vendido:'} />} 
         <Field name={'name'} component={MyTextInput} label='Título' placeholder='Ingresa el nombre del producto' maxLength={20} />
         <Field name={'description'} component={MyTextInput} label='Descripción' placeholder='Ingresa una descripción' multiline={true}/>
         <Field name={'price'} component={MyTextInput} label='Precio' placeholder='Ingresa el precio que tendrá el producto' keyboardType='numeric'/>
