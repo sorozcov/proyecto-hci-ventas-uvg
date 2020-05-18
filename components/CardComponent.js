@@ -10,7 +10,7 @@ import * as actionsSavedSales from '../src/actions/savedSales';
 import * as firebase from "firebase";
 
 import * as selectors from '../src/reducers';
-
+import { openComposer } from 'react-native-email-link'
 
 function CardSale(props) {
   const {indexShowTab,isMySale, loggedUser, saveSavedSale, removeSavedSale, saved } = props;
@@ -167,13 +167,27 @@ function CardSale(props) {
                     subtitleNumberOfLines={2}
                     
                     left={(props) => sale.user.image!=null ? (<Avatar.Image key={sale.user.image} {...props} size={48} source={{uri:saleUserImage}} />):(<Avatar.Icon size={48} {...props} icon='account' />)}
-                    right={(props) => <IconButton
+                    right={(props) => <View>
+                      <IconButton
                       icon="whatsapp"
                       color={"white"}
                       style={{backgroundColor:"green",marginRight:15}}
                       size={30}
                       onPress={() => openWhatsapp()}
-                      /> }
+                      /> 
+                      <IconButton
+                      icon="email"
+                      color={"white"}
+                      style={{backgroundColor:"red",marginRight:15}}
+                      size={30}
+                      
+                      onPress={() => openComposer({
+                        to: sale.user.email,
+                        subject: `Producto UVGET ${sale.name}`,
+                        body: `Hola ${sale.user.name}, estoy interesado en tu producto ${sale.name}.`
+                     })}
+                      /> 
+                      </View>}
                   />
                
             </ScrollView>
