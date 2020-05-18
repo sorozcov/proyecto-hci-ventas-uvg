@@ -1,7 +1,7 @@
 import React, { useState} from 'react';
-import { Switch, StyleSheet, View } from 'react-native';
+import { Switch, StyleSheet, View, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import { Text } from 'react-native-paper';
+import { Text ,Snackbar} from 'react-native-paper';
 import * as firebase from "firebase";
 
 import * as actionsMySales from '../src/actions/mySales';
@@ -9,9 +9,12 @@ import * as actionsMySales from '../src/actions/mySales';
 
 function SwitchInput(props) {
   const [value, changeValue] = useState(props.isSold);
+  const [snackbarShow, changeSnackbarShow] = useState(false);
+  
   async function saveSaleSold(){
     const sold = !value;
     changeValue();
+    changeSnackbarShow(true)
     await firebase.firestore().collection('sales').doc(props.saleid).update({ isSold: sold});
     props.saveSale({ saleid: props.saleid, isSold: sold});
   }
@@ -25,6 +28,7 @@ function SwitchInput(props) {
         onValueChange={saveSaleSold}
         value={value}
       />
+  
     </View>
   );
 }
@@ -35,13 +39,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     marginLeft:'4%',
-    marginTop:-10
+    marginTop:Platform.OS=="ios"?10:-10
   },
   textSwitchStyle:{ 
     fontFamily: 'dosis-regular',
     padding: '4%',
     fontSize:12,
-    marginTop: 19,
+    marginTop: Platform.OS=="ios"?10:19,
   },
 });
 
