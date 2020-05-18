@@ -175,8 +175,9 @@ function CardSale(props) {
                       onPress={() => openWhatsapp()}
                       /> }
                   />
-                <IconButton testID={'close-button'}  icon="close"  size={30} style={{top:3,right:3,position:'absolute',backgroundColor:'white'}} mode="contained" onPress={()=>onCardClick()}  />
+               
             </ScrollView>
+            <IconButton testID={'close-button'}  icon="close"  size={30} style={{top:35,right:3,position:'absolute',backgroundColor:'white'}} mode="contained" onPress={()=>onCardClick()}  />
         </Modal>
     </View> 
     )
