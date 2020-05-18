@@ -77,7 +77,7 @@ function CardSale(props) {
   }
   //const imageUrl = "https://firebasestorage.googleapis.com/v0/b/proyectoapp-add00.appspot.com/o/5ugr1aI1GoZ0QudkbzbeyRAv1iJ3?alt=media"
   return (
-        <View style={{flex:1}}> 
+        <View style={{flex:0.5}}> 
         <Card onPress={()=> onCardClick()} style={{ margin: '1.1%',flex:0.5,backgroundColor:'white',elevation:10  }}>
         <Card.Title
              //left={(props) => <Avatar.Icon {...props} icon="folder" size={30}/>}
@@ -146,7 +146,7 @@ function CardSale(props) {
                 <Text style={styles.contentTitleAtributte}>Descripción</Text>
                 <Text style={styles.contentDescription}>{sale.description}</Text>
                 <Text style={styles.contentTitleAtributte}>Detalles</Text>
-                <Text style={styles.contentAttributes}>Estado: {sale.state==1 ? "Nuevo" : "Usado"}</Text>
+                <Text style={styles.contentAttributes}>Estado: {sale.state==1 ? "Nuevo" : ''}{sale.state==2 ? "Usado como Nuevo" : ''}{sale.state==3 ? "Usado al 50%" : ''}{sale.state==4 ? "Usado con bastante desgaste" : ''}</Text>
                 <Text style={styles.contentAttributes}>Precio: GTQ {sale.price}</Text>
                 
                 <View style={{flexDirection:'row',flexWrap:'wrap',width:Dimensions.get('window').width}}>

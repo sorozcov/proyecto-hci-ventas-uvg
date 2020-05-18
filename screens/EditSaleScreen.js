@@ -25,105 +25,125 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
     navigation.setOptions({ title: 'EDITAR VENTA' });
 
   async function createSaleCollectionFirebase(values){
-    Keyboard.dismiss();
-    setmodalVisibleIndicatorSale(true);
-    //Se guarda la imagen
-    try {
+    console.log(values);
+    if(values.image!=null && values.category.length>0 && values.state.length>0){
+        Keyboard.dismiss();
+        setmodalVisibleIndicatorSale(true);
+        //Se guarda la imagen
+        try {
 
-      var newSaleDoc = null;
-      var uid = "";
-      let image = null;
-      if(isNew){
-        newSaleDoc = firebase.firestore().collection('sales').doc();
-        uid = newSaleDoc.id;
-      } else {
-        newSaleDoc = firebase.firestore().collection('sales').doc(initialValues.saleid);
-        uid = newSaleDoc.id;
-        image=(await newSaleDoc.get()).data().image;
-      }
-      
-      values.image = values.image!==undefined ? values.image : null;
-      if(values.image!==null && (isNew || imageUploadFunctions.isEdited(values.image, initialValues.image))){
-
-        if(!isNew){ 
-          try{
-            
-            await firebase.storage().ref("ProductImages/" + image + '.jpg').delete();
-            await firebase.storage().ref("ProductImages/" + image + '_300x300.jpg').delete();
-            // await firebase.storage().ref("ProductImages/" + image + '_600x600.jpg').delete();
-          }catch(error){
-            console.log("Error eliminando imagenes.")
+          var newSaleDoc = null;
+          var uid = "";
+          let image = null;
+          if(isNew){
+            newSaleDoc = firebase.firestore().collection('sales').doc();
+            uid = newSaleDoc.id;
+          } else {
+            newSaleDoc = firebase.firestore().collection('sales').doc(initialValues.saleid);
+            uid = newSaleDoc.id;
+            image=(await newSaleDoc.get()).data().image;
           }
-        }
+          
+          values.image = values.image!==undefined ? values.image : null;
+          if(values.image!==null && (isNew || imageUploadFunctions.isEdited(values.image, initialValues.image))){
 
-        let blob = await imageUploadFunctions.uriToBlob(values.image);        
-        //console.log(base64);
-        let imageUid =  UUIDGenerator.v4();
-        await imageUploadFunctions.uploadToFirebase(blob,imageUid);
-        values.image = imageUid;
-      }else{
-        values.image = image;
-      }
-      let selectedCategories = [];
-      values.category.map(categorySelectedId => {
-        selectedCategories.push(categories.filter(category => category.categoryid === categorySelectedId)[0]);
-      })
-      let categoriesFilter = {}
-      values.category.forEach(categoryId => {
-            categoriesFilter[categoryId]=true 
-      });
-      let dateCreated = new Date();
-      dateCreated = dateCreated.getTime();
-      if(isNew){
-        var newSaleInfo = {
-          saleid: uid, 
-          name: values.name,
-          description: values.description,
-          price: values.price,
-          state: values.state[0],
-          category: selectedCategories,
-          categories:categoriesFilter,
-          image: values.image,
-          user: loggedUser,
-          dateCreated:dateCreated,
-          isSold: false,
-          usersSaveForLater: [],
-        };
-        newSaleDoc.set(newSaleInfo);
-        setmodalVisibleIndicatorSale(false);
-        saveSale(navigation, newSaleInfo, isNew);
-      } else {
-        var editSaleInfo = {
-          saleid: uid,
-          name: values.name,
-          description: values.description,
-          price: values.price,
-          state: values.state[0],
-          category: selectedCategories,
-          categories:categoriesFilter,
-          dateLastEdited:dateCreated,
-          image:values.image,
-        };
-        newSaleDoc.update(editSaleInfo);
-        setTimeout(function(){
+            if(!isNew){ 
+              try{
+                
+                await firebase.storage().ref("ProductImages/" + image + '.jpg').delete();
+                await firebase.storage().ref("ProductImages/" + image + '_300x300.jpg').delete();
+                // await firebase.storage().ref("ProductImages/" + image + '_600x600.jpg').delete();
+              }catch(error){
+                console.log("Error eliminando imagenes.")
+              }
+            }
+
+            let blob = await imageUploadFunctions.uriToBlob(values.image);        
+            //console.log(base64);
+            let imageUid =  UUIDGenerator.v4();
+            await imageUploadFunctions.uploadToFirebase(blob,imageUid);
+            values.image = imageUid;
+          }else{
+            values.image = image;
+          }
+          let selectedCategories = [];
+          values.category.map(categorySelectedId => {
+            selectedCategories.push(categories.filter(category => category.categoryid === categorySelectedId)[0]);
+          })
+          let categoriesFilter = {}
+          values.category.forEach(categoryId => {
+                categoriesFilter[categoryId]=true 
+          });
+          let dateCreated = new Date();
+          dateCreated = dateCreated.getTime();
+          if(isNew){
+            var newSaleInfo = {
+              saleid: uid, 
+              name: values.name,
+              description: values.description,
+              price: values.price,
+              state: values.state[0],
+              category: selectedCategories,
+              categories:categoriesFilter,
+              image: values.image,
+              user: loggedUser,
+              dateCreated:dateCreated,
+              isSold: false,
+              usersSaveForLater: [],
+            };
+            newSaleDoc.set(newSaleInfo);
+            setmodalVisibleIndicatorSale(false);
+            saveSale(navigation, newSaleInfo, isNew);
+          } else {
+            var editSaleInfo = {
+              saleid: uid,
+              name: values.name,
+              description: values.description,
+              price: values.price,
+              state: values.state[0],
+              category: selectedCategories,
+              categories:categoriesFilter,
+              dateLastEdited:dateCreated,
+              image:values.image,
+            };
+            newSaleDoc.update(editSaleInfo);
+            setTimeout(function(){
+              setmodalVisibleIndicatorSale(false);
+            },500)
+            saveSale(navigation, editSaleInfo, isNew);
+          }
+
+        } catch (error) {
+          console.log(error);
+          let errorMessage = "No se pudo guardar la venta"
+          
           setmodalVisibleIndicatorSale(false);
-        },500)
-        saveSale(navigation, editSaleInfo, isNew);
+          setTimeout(function(){
+          Alert.alert(
+          "Error",
+          errorMessage,
+          [
+            {text: 'OK', onPress: () => {}},
+          ],
+          )},100)
+        }
+    }else{
+      let errorMessage=null;
+      if(values.image==null){
+        errorMessage = "Necesitas una imagen obligatoriamente para crear tu producto."
+      }else if(values.category.length==0){
+        errorMessage = "Necesitas escoger al menos una categoría para crear tu producto."
+      }else if(values.state.length==0){
+        errorMessage = "Necesitas escoger un estado para tu producto."
       }
-
-    } catch (error) {
-      console.log(error);
-      let errorMessage = "No se pudo guardar la venta"
-      
-      setmodalVisibleIndicatorSale(false);
       setTimeout(function(){
-      Alert.alert(
-      "Error",
-      errorMessage,
-      [
-        {text: 'OK', onPress: () => {}},
-      ],
-      )},100)
+        Alert.alert(
+        "Faltan datos",
+        errorMessage,
+        [
+          {text: 'OK', onPress: () => {}},
+        ],
+        )},20)
     }
   }
   async function deleteSaleCollectionFirebase(){
@@ -166,7 +186,7 @@ function EditSaleScreen({ theme, navigation, dirty, valid, handleSubmit, categor
         <Field name={'name'} component={MyTextInput} label='Título' placeholder='Ingresa el nombre del producto' maxLength={20} />
         <Field name={'description'} component={MyTextInput} label='Descripción' placeholder='Ingresa una descripción' multiline={true}/>
         <Field name={'price'} component={MyTextInput} label='Precio' placeholder='Ingresa el precio que tendrá el producto' keyboardType='numeric'/>
-        <Field name={'state'} component={PickerInput} title='Estado' single={true} selectedText="Estado" placeholderText="Seleccionar estado" options={[{ label:'Nuevo', value:"1" }, { label:'Usado', value:"2" }]} 
+        <Field name={'state'} component={PickerInput} title='Estado' single={true} selectedText="Estado" placeholderText="Seleccionar estado" options={[{ label:'Nuevo', value:"1" }, { label:'Usado como Nuevo', value:"2" }, { label:'Usado al 50%', value:"3" }, { label:'Usado con bastante desgaste', value:"4" }]} 
           selectedItems={!isNew?[initialValues.state]:[]}/>
         <View style={styles.containerTooltip}>
           <View style={styles.tooltipStyle}>
@@ -295,6 +315,7 @@ export default connect(
     categories: selectors.getCategories(state),
     loggedUser: selectors.getLoggedUser(state),
     initialValues: selectors.getMySaleSelected(state),
+    
   }),
   dispatch => ({
     saveSale(navigation, sale, isNew) {
@@ -314,9 +335,7 @@ export default connect(
   enableReinitialize : true,
   validate: (values) => {
     const errors = {};
-    errors.image = !values.image
-      ? 'Este campo es obligatorio'
-      : undefined;
+
     errors.name = !values.name
       ? 'Este campo es obligatorio'
       : undefined;
@@ -328,12 +347,7 @@ export default connect(
       : isNaN(parseInt(values.price))
       ? 'Ingresa un número correcto'
       : undefined;
-    errors.state = values.state && values.state.length === 0
-      ? 'Este campo es obligatorio'
-      : undefined;
-    errors.category = values.category && values.category.length === 0
-      ? 'Este campo es obligatorio'
-      : undefined;
+
 
     return errors;
   }
