@@ -68,7 +68,8 @@ export default class MultiSelectExample extends Component {
       />
       
       </View>
-      {this.meta.touched && (this.meta.error && <Text style={styles.textError}>{this.meta.error}</Text>)}
+     
+      {(this.meta.error && <Text style={styles.textError}>{this.meta.error}</Text>)}
     </View>
     </KeyboardAvoidingView>
   
